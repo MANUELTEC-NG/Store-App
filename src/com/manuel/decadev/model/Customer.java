@@ -9,6 +9,14 @@ import java.util.ArrayList;
 public class Customer implements IReceipt {
     String firstName = "";
     String lastName = "";
+    static int numberOfPatronage = 0;
+
+    public Customer(String firstName, String lastName, String email, double phone) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phone = phone;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -25,12 +33,6 @@ public class Customer implements IReceipt {
     ArrayList<Product> productArrayList;
     ProductCatalogue productCatalogue;
 
-    public Customer(String firstName, String lastName, String email, double phone) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.phone = phone;
-    }
 
     public void purchaseProduct(String productType, String productName){
 
@@ -55,6 +57,7 @@ public class Customer implements IReceipt {
         // TODO
         //implement the logic of making payment
         // issue payment to the Store Bank Account
+        updateNumberOfPatronage();
     }
 
     public void giveReview(){
@@ -72,5 +75,8 @@ public class Customer implements IReceipt {
                 + this.getLastName() + "fully paid for the product");
     }
 
+    public void updateNumberOfPatronage(){
 
+        this.numberOfPatronage += 1;
+    }
 }

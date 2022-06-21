@@ -21,7 +21,9 @@ public Staff(int id, String firstName, String lastName,String department, String
 
 public abstract void stateGender(String gender);
 public abstract boolean canWorkOverTime();
-
+public void setRole(String role){
+    this.role = role;
+}
 
 
 }

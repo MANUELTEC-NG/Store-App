@@ -5,7 +5,7 @@ package com.manuel.decadev.model;
 public class Cashier extends  Staff {
 
     final private short weeklyHour = 70;
-    final private short allowableAbsentTimes = 2;
+    private short allowableAbsentTimes = 2;
 
     public Cashier(int id, String firstName, String lastName, String department, String role) {
         super(id, firstName, lastName, department, role);
@@ -28,6 +28,20 @@ public class Cashier extends  Staff {
 
         return true;
     }
+    public void setAllowableAbsentTimes(short allowableAbsentTimes) {
+        this.allowableAbsentTimes = allowableAbsentTimes;
+    }
 
+    public short getWeeklyHour() {
+        return weeklyHour;
+    }
+
+    public short getAllowableAbsentTimes() {
+        return allowableAbsentTimes;
+    }
+
+    public String getRole(){
+        return role;
+    }
 
 }
