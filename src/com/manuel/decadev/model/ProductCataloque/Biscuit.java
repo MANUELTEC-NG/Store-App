@@ -28,4 +28,8 @@ public class Biscuit extends Product {
     public boolean hasPositiveBrandReview() {
         return false;
     }
+
+    public String getProductNAme() {
+        return productNAme;
+    }
 }
