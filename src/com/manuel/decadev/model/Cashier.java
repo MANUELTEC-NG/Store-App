@@ -5,10 +5,11 @@ package com.manuel.decadev.model;
 public class Cashier extends  Staff {
 
     final private short weeklyHour = 70;
-    private short allowableAbsentTimes = 2;
+    private static short allowableAbsentTimes = 2;
 
     public Cashier(int id, String firstName, String lastName, String department, String role) {
         super(id, firstName, lastName, department, role);
+
     }
 
     public void sell (Customer customer){
@@ -20,7 +21,7 @@ public class Cashier extends  Staff {
 
     @Override
     public void stateGender(String gender){
-        this.gender = gender;
+        setGender(gender);
     }
 
     @Override
@@ -40,8 +41,8 @@ public class Cashier extends  Staff {
         return allowableAbsentTimes;
     }
 
-    public String getRole(){
-        return role;
+    @Override
+    public String getRole() {
+        return super.getRole();
     }
-
 }

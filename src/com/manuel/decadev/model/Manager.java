@@ -9,9 +9,9 @@ public class Manager extends Staff{
     }
 
     public void issueQuery(Cashier cashier){
-        cashier = new Cashier(1003, "Mary", "Daniel",
-                "Marketing","Cashier");
         cashier.setAllowableAbsentTimes((short) (cashier.getAllowableAbsentTimes() - 1));
+        outputHelperMethod("Query sent to" + " " + cashier.getFirstName() + " " + cashier.getLastName());
+        outputHelperMethod("You have" + " " + cashier.getAllowableAbsentTimes()+ " " + "warning left before being fired");
 
     }
 
@@ -29,5 +29,11 @@ public class Manager extends Staff{
         System.out.println(gender);
     }
 
+    public void holdMeeting(){
 
+    }
+
+    public void outputHelperMethod(String msg){
+        System.out.println(msg);
+    }
 }
