@@ -1,6 +1,7 @@
 package com.manuel.decadev.model;
 
 
+import javax.lang.model.type.NullType;
 
 public class Cashier extends  Staff {
 
@@ -44,5 +45,19 @@ public class Cashier extends  Staff {
     @Override
     public String getRole() {
         return super.getRole();
+    }
+    public void resetCashierData(String resetFirst,
+                                 String resetLastName, int resetId){
+       super.setId(resetId);
+       this.setFirstName(resetFirst);
+       this.setLastName(resetLastName);
+
+    }
+
+    @Override
+    public boolean isBonafideStaff(Staff staff){
+        Cashier cashier = (Cashier) staff;
+        return cashier.getId() == 0 &&
+                (cashier.getFirstName().equals("")) && cashier.getLastName().equals("");
     }
 }

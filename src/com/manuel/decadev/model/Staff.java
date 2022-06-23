@@ -5,7 +5,7 @@ public abstract class Staff {
 private int id = 0;
 private String firstName = "";
 private String lastName = "";
-final static String companyName = "Decagon Student Convenience Store";
+final static String companyName = "Decagon Convenience Store";
 private String role = "";
 private short durationWithComp = 0;
 private String department = "";
@@ -25,6 +25,7 @@ public Staff(String gender){
 
 public abstract void stateGender(String gender);
 public abstract boolean canWorkOverTime();
+public abstract boolean isBonafideStaff(Staff staff);
 public void setRole(String role){
     this.role = role;
 }
@@ -64,4 +65,26 @@ public void setRole(String role){
     public void setGender(String gender) {
         this.gender = gender;
     }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setDurationWithComp(short durationWithComp) {
+        this.durationWithComp = durationWithComp;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+
 }

@@ -71,8 +71,9 @@ public class Customer implements IReceipt {
     }
 
     public void printReceipt(){
-        System.out.println("Custumer" + " " + this.getFirstName() +" "
-                + this.getLastName() + "fully paid for the product");
+        System.out.println("Customer" + " " + this.getFirstName() +" "
+                + this.getLastName() + "bought product.");
+        System.out.println("Fully paid!");
     }
 
     public void updateNumberOfPatronage(){
