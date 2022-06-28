@@ -11,18 +11,19 @@ public class Biscuit extends Product {
     private static int purchaseCount = 0;
 
 
-    public Biscuit ( String productNAme, String manufacturer, String category,
+    public Biscuit ( String productNAme,int price, String manufacturer, String category,
                      int expiryDate, int manufacturingDate,
                   int serialNo ){
 
-        super(manufacturer,manufacturingDate, category);
+        super(price, manufacturer,manufacturingDate, category);
         this.productNAme = productNAme;
         this.serialNo = serialNo;
         this.expiryDate = expiryDate;
 
         purchaseCount += 1;
-
     }
+
+
 
     @Override
     public boolean hasPositiveBrandReview() {

@@ -5,17 +5,17 @@ import com.manuel.decadev.model.Product;
 public class Gala extends Product {
 
 
-     private String productNAme;
+    private String productNAme;
     private int serialNo;
     private String manufacturer;
     private int expiryDate = 0;
     private static int purchaseCount = 0;
 
 
-    public Gala( String productNAme,String manufacturer, String category, int manufacturingDate
+    public Gala( int price, String productNAme,String manufacturer, String category, int manufacturingDate
                  , int serialNo ){
 
-        super(manufacturer, manufacturingDate, category);
+        super(price, manufacturer, manufacturingDate, category);
 
         this.productNAme = productNAme;
         this.serialNo = serialNo;
@@ -35,5 +35,9 @@ public class Gala extends Product {
         return 0;
     }
 
+    public void setPrice(int price){
+
+        super.price = price;
+    }
 
 }
