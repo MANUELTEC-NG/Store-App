@@ -6,9 +6,9 @@ public class Manager extends Staff{
 
 
     Cashier cashier;
-    public Manager (int id, String firstName, String lastName, String department, String role){
+    public Manager (String firstName, String lastName, String gender, String department, String role, int compId){
 
-        super(id,firstName, lastName, department, role);
+        super(firstName, lastName, gender, department, role, compId);
     }
 
     public void issueQuery(Cashier cashier){

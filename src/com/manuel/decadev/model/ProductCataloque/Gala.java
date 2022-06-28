@@ -12,10 +12,11 @@ public class Gala extends Product {
     private static int purchaseCount = 0;
 
 
-    public Gala( int price, String productNAme,String manufacturer, String category, int manufacturingDate
+    public Gala(String productNAme,int price, String manufacturer,
+                 String productCategory, int manufacturingDate
                  , int serialNo ){
 
-        super(price, manufacturer, manufacturingDate, category);
+        super(price, manufacturer, manufacturingDate, productCategory);
 
         this.productNAme = productNAme;
         this.serialNo = serialNo;

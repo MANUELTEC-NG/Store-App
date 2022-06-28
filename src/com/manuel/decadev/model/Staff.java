@@ -1,27 +1,25 @@
 package com.manuel.decadev.model;
 
-public abstract class Staff {
+public abstract class Staff extends Person {
 
 private int id = 0;
-private String firstName = "";
-private String lastName = "";
 final static String companyName = "Decagon Convenience Store";
 private String role = "";
 private short durationWithComp = 0;
 private String department = "";
-private String gender = "";
 
-public Staff(int id, String firstName, String lastName,String department, String role){
+
+public Staff(String firstName, String lastName,String gender, String department, String role, int id){
+
+    super(firstName, lastName, gender);
     this.id = id;
-    this.firstName = firstName;
-    this.lastName = lastName;
     this.department = department;
     this.role = role;
 }
 
-public Staff(String gender){
-    this.gender = gender;
-}
+//public void setGender (String gender){
+//    super.gender = gender;
+//}
 
 public abstract void stateGender(String gender);
 public abstract boolean canWorkOverTime();
@@ -35,11 +33,11 @@ public void setRole(String role){
     }
 
     public String getFirstName() {
-        return firstName;
+        return super.firstName;
     }
 
     public String getLastName() {
-        return lastName;
+        return super.lastName;
     }
 
     public static String getCompanyName() {

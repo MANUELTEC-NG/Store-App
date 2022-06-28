@@ -1,17 +1,24 @@
 package com.manuel.decadev.model;
 
-import com.manuel.decadev.model.Interface.IReceipt;
+import com.manuel.decadev.model.Interface.IPrint;
 import com.manuel.decadev.model.ProductCataloque.Biscuit;
 import com.manuel.decadev.model.ProductCataloque.ProductCatalogue;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class Customer implements IReceipt {
-    String firstName = "";
-    String lastName = "";
+public class Customer extends Person implements IPrint {
     static int numberOfPatronage = 0;
+    private String email;
+    private  double phone;
 
-    public Customer(String firstName, String lastName, String email, double phone) {
+    Product product;
+    //ArrayList<Product> productArrayList;
+    ProductCatalogue productCatalogue;
+
+
+    public Customer(String firstName, String lastName, String gender, String email, double phone) {
+        super(firstName, lastName, gender);
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -26,24 +33,20 @@ public class Customer implements IReceipt {
         return lastName;
     }
 
-    String email = "";
-    double phone = 1-234-567-890;
-
-    Product product;
-    ArrayList<Product> productArrayList;
-    ProductCatalogue productCatalogue;
-
-
     public void purchaseProduct(String productType, String productName){
 
         // TODO
         // implement purchase method
         if (productType.equals("Biscuit")) {
-           ArrayList<Biscuit> biscuits = ProductCatalogue.getBiscuitsCatalogue();
+
+            // might throw exception
+
+           List<Biscuit> biscuits = (ArrayList<Biscuit>) ProductCatalogue.getCatalogue("Biscuit");
            makePayment();
-           biscuits.forEach(biscuit -> {
-               if(biscuit.getProductNAme().equals(productName)){
-                   printReceipt();
+            if ( biscuits != null)
+                biscuits.forEach(biscuit -> {
+                if(biscuit.getProductNAme().equals(productName)){
+                   print();
                    biscuits.remove(biscuit);
 
 
@@ -70,7 +73,7 @@ public class Customer implements IReceipt {
 
     }
 
-    public void printReceipt(){
+    public void print(){
         System.out.println("Customer" + " " + this.getFirstName() +" "
                 + this.getLastName() + "bought product.");
         System.out.println("Fully paid!");

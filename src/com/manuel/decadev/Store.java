@@ -4,11 +4,11 @@ import com.manuel.decadev.model.Cashier;
 import com.manuel.decadev.model.Customer;
 import com.manuel.decadev.model.Handlers.PrintHandler;
 import com.manuel.decadev.model.Manager;
-import com.manuel.decadev.model.Product;
 import com.manuel.decadev.model.ProductCataloque.Biscuit;
-import com.manuel.decadev.model.ProductCataloque.Gala;
+import com.manuel.decadev.model.ProductCataloque.ProductCatalogue;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Store {
@@ -18,9 +18,9 @@ public class Store {
 	// write your code
 
         Scanner scanner = new Scanner(System.in);
-        prompt();
+       // prompt();
 
-            while (true) {
+            /*while (true) {
 
                 int input =  scanner.next().charAt(0);
 
@@ -40,6 +40,11 @@ public class Store {
 
             }
 
+             */
+        ProductCatalogue pc = new ProductCatalogue();
+
+
+        List<Biscuit> biscuits = pc.getCatalogue("Biscuit");
     }
 
     public static void prompt(){
@@ -51,8 +56,8 @@ public class Store {
 
     public static void interactWithManagerClass(){
 
-        Manager aManager = new Manager(2002,"Master", "Java",
-                "Engineering Department", "Manager");
+        Manager aManager = new Manager("Olu","Master", "Male",
+                "Engineering Department", "Store Manager", 10034);
         char retry;
         System.out.println("Heads up for the Manager's Intro");
 
@@ -62,8 +67,8 @@ public class Store {
                 " "+ aManager.getLastName()+ "." + "A" +" "+aManager.getRole() +" "+"In the"+" "+aManager.getDepartment()+" "
                 + "In"+" " + Manager.getCompanyName();
 
-        Cashier mary = new Cashier(1003, "Mary", "Daniel",
-                "Marketing","Cashier");
+        Cashier mary = new Cashier("Daniel", "Mary", "Sales Department",
+                "Cashier", "Female", 5032);
 
         System.out.println(selfIntro);
         System.out.println("I am a level headed Manager and yet" +
@@ -80,9 +85,9 @@ public class Store {
     }
 
     public static void interactWithCahierClass(){
-        Customer customer = new Customer("Sylva", "Dodo",
+        Customer customer = new Customer("Sylva", "Dodo","Female",
                 "something@gmail.com", 234-421-494);
-        customer.printReceipt();
+        customer.print();
 
     }
 

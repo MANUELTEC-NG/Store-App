@@ -6,7 +6,7 @@ public abstract class Product {
     protected String manufacturer = "";
     protected int price = 0;
 
-public Product(int price, String manufacturer, int manufacturingDate, String category){
+public Product(int price, String manufacturer, int manufacturingDate, String productCategory){
     this.category = category;
     this.manufacturingDate = manufacturingDate;
     this.manufacturer = manufacturer;

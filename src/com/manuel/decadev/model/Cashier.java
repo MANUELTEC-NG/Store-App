@@ -8,8 +8,8 @@ public class Cashier extends  Staff {
     final private short weeklyHour = 70;
     private static short allowableAbsentTimes = 2;
 
-    public Cashier(int id, String firstName, String lastName, String department, String role) {
-        super(id, firstName, lastName, department, role);
+    public Cashier(String firstName, String lastName, String department, String role, String gender, int compId) {
+        super(firstName,lastName, gender, department, role, compId);
 
     }
 
