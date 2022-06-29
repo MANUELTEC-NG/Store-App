@@ -25,14 +25,17 @@ public class Manager extends Staff{
     }
 
     public boolean hireCashier(String fName, String lName, int compId){
-
     Cashier damilola = new Cashier(fName, lName, this.getDepartment(),
             "Cashier", "Female", compId);
+
      int workExp = damilola.retrieveWorkExperience() == 0 ? damilola.setWorkExperience(2): damilola.retrieveWorkExperience();
 
-
-
-
+     if (workExp > 0) {
+         cashiers.add(damilola);
+         // TODO
+         // Assert Non Null here
+         return true;
+     }
         return false;
     }
 
