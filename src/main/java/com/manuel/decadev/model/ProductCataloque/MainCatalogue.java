@@ -10,9 +10,9 @@ import java.util.Scanner;
 
 public class MainCatalogue {
 
-    static ArrayList<Product> choco;
-    static  ArrayList<Product> oatmeals ;
-    static ArrayList<Product> arrowroots;
+    static ArrayList<Product> chocolateCatalogue;
+    static  ArrayList<Product> oatmealCatalogue;
+    static ArrayList<Product> arrowRootCatalogue;
 
     static ArrayList<Product> carrotCatalogue;
     static  ArrayList<Product> branCatalogue;
@@ -25,10 +25,9 @@ public class MainCatalogue {
 
 
 
-
     public static void main(String[] args) throws IOException  {
 
-                addTo();
+                partitionProductToCatalogues();
 
         ///System.out.println(choco.size());
         //System.out.println(CookieCatalogue.isSameThing());
@@ -50,14 +49,23 @@ public class MainCatalogue {
 
 
     }
+    private MainCatalogue(){
+        try{
+
+            partitionProductToCatalogues();
+        } catch (IOException ioException){
+            System.out.println("Something went wrong in the PartitionProductCatalogue");
+            ioException.printStackTrace();
+        }
+
+    }
 
 
-     static public void addTo() throws  IOException{
+    static private void partitionProductToCatalogues() throws  IOException{
 
         ArrayList<String> totalCategory = new ArrayList<>();
 
-          choco = CookieCatalogue.getChocoCatalogue();
-
+          chocolateCatalogue = CookieCatalogue.getChocoCatalogue();
 
           try(
                   FileInputStream fileInputStream = new FileInputStream("/Users/dec/IdeaProjects/Store-App/sampledatafoodsales.csv.csv");
@@ -74,30 +82,27 @@ public class MainCatalogue {
                   double unitPrice = Double.parseDouble(productData[6]);
                   double totalPrice = Double.parseDouble(productData[7]);
 
-
-
                   if (!(totalCategory.contains(categoryName))) {
                       totalCategory.add(categoryName);
                   }
 
-
                   if ( categoryName.equals("cookies")){
                       if (productName.equals("chocolate chip")){
-                          choco = CookieCatalogue.getChocoCatalogue();
-                          choco.add(new Product((int)unitPrice, productName,
+                          chocolateCatalogue = CookieCatalogue.getChocoCatalogue();
+                          chocolateCatalogue.add(new Product((int)unitPrice, productName,
                                   "Yoyo", 2021, categoryName));
                           CookieCatalogue.setTotalChocoQty(CookieCatalogue.getTotalChocoQty() + productQty);
                       } else if (productName.equals("oatmeal raisin")){
 
-                          oatmeals = CookieCatalogue.getOatCatalogue();
-                          oatmeals.add(new Product((int)unitPrice, productName,
+                          oatmealCatalogue = CookieCatalogue.getOatCatalogue();
+                          oatmealCatalogue.add(new Product((int)unitPrice, productName,
                                   "Yoyo", 2021, categoryName));
                           CookieCatalogue.setTotalOatQuantity(CookieCatalogue.getTotalOatQuantity() + productQty);
 
                       } else if (productName.equals("arrowroot")){
 
-                          arrowroots = CookieCatalogue.getArrowRootCatalogue();
-                          arrowroots.add(new Product((int)unitPrice, productName,
+                          arrowRootCatalogue = CookieCatalogue.getArrowRootCatalogue();
+                          arrowRootCatalogue.add(new Product((int)unitPrice, productName,
                                   "Yoyo", 2021, categoryName));
                           CookieCatalogue.setTotalArrowRootQty(CookieCatalogue.getTotalArrowRootQty() + productQty);
 
@@ -181,15 +186,71 @@ public class MainCatalogue {
 
 
 
-//
-//         for (int i = 0; i < 10; i+=1){
-//             choco.add(biscuit);
 //         }
 
 
      }
 
+    private static ArrayList<Product> selectProduct(String productName){
 
+        String name = productName.trim().toLowerCase();
+        switch (name){
+
+            case "chocolate":
+
+                return chocolateCatalogue;
+            case "oatmeal":
+                return oatmealCatalogue;
+            case "arrowroot":
+                return arrowRootCatalogue;
+            case "carrot":
+                return carrotCatalogue;
+            case "bran":
+                return branCatalogue;
+            case "banana":
+                return bananaCatalogue;
+            case "pretzel":
+                return pretzelsCatalogue;
+            case "wheat":
+                return wholeWheatCatalogue;
+            case "potato":
+                return potatoChipsCatalogue;
+
+            default:
+                return new ArrayList<Product>();
+
+        }
+
+
+    }
+
+    public static Product searchCatalogue(String productName, String manufacturer){
+        ArrayList<Product> catalogue = selectProduct(productName);
+        // TODO
+        // check non null here
+
+
+        String manufacturerName = manufacturer.trim().toLowerCase();
+        int catalogueSize = catalogue.size();
+        int index = 0;
+
+        while (index < catalogueSize){
+            Product product = catalogue.get(index);
+            if (product.getManufacturerName().equals(manufacturerName)){
+                return product;
+            }
+
+            index +=1;
+        }
+
+        return null;
+    }
+    public static ArrayList<Product> sendProdCatalogue(){
+        // sending a particular catalogue to cashier for product
+        // removal when item is bought by customer
+
+        return chocolateCatalogue;
+    }
 
 
 

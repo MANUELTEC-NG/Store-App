@@ -17,4 +17,9 @@ public class Product extends Item {
     public boolean hasPositiveBrandReview() {
         return false;
     }
+
+    public String getManufacturerName(){
+
+        return super.manufacturer;
+    }
 }

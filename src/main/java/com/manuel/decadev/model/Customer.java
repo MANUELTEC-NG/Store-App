@@ -2,11 +2,12 @@ package com.manuel.decadev.model;
 
 import com.manuel.decadev.model.Interface.IPrint;
 import com.manuel.decadev.model.ProductCataloque.Biscuit;
+import com.manuel.decadev.model.ProductCataloque.MainCatalogue;
 import com.manuel.decadev.model.ProductCataloque.ProductCatalogue;
 
 import java.util.ArrayList;
 
-public class Customer extends Person implements IPrint <Customer> {
+public class Customer extends Person implements IPrint <Product, Customer> {
     static int numberOfPatronage = 0;
     private String email;
     private double phone;
@@ -30,59 +31,51 @@ public class Customer extends Person implements IPrint <Customer> {
         return lastName;
     }
 
-    public Biscuit purchaseProduct(String productType, String productName) {
+    public Product purchaseProduct(String productName, String manufacturer) {
         // TODO
         // implement purchase method
-        if (productType.toLowerCase().equals("Biscuit".toLowerCase())) {
-            ArrayList<Biscuit> biscuits = ProductCatalogue.getProductCatalogue(productType);
-            // makePayment();
-            if (biscuits != null) {
-                for(Biscuit biscuit : biscuits) {
-                    if (biscuit.getProductNAme().equals(productName)) {
-                        //makePayment(biscuit);
-                        // Asserts true here
-                        return biscuit;
-                    }
-                    //biscuits.remove(biscuit);
-                }
-            }
-        }
+        Product product = handleProductSelection(productName, manufacturer);
+        makePayment(product);
+
+        forwardToCashier(product);
+        print(product, this );
+
 
         return  null;
     }
 
-    public boolean makePayment (Item forItem) {
+    public static Product forwardToCashier(Product p) {
+        return p;
+    }
+
+    public boolean makePayment (Product forItem) {
         // TODO
         //implement the logic of making payment
         // issue payment to the Store Bank Account
         updateNumberOfPatronage();
         return true;
     }
-    public void giveReview (Item itemBrand) {
+    public void giveReview (Product itemBrand) {
         // TODO - implement logic of
         // customer giving review to product bought
     }
 
-    public Biscuit handleProductSelection ( String productName){
-        biscuits =  ProductCatalogue.getProductCatalogue("biscuit");
+    public Product handleProductSelection ( String productName, String searchBy){
 
-        //TODO
-        // Assert not null
+        String searchQuery = searchBy.trim().toLowerCase();
+       Product product = MainCatalogue.searchCatalogue(productName, searchQuery);
+       if (product != null)
+           return product;
 
-        for (Biscuit biscuit : biscuits) {
-            if (biscuit.getProductNAme().equals(productName)){
-                return biscuit;
-            }
-        }
-        //return "";
-        return null;
+
+       return null;
     }
 
     @Override
-    public void print ( Customer customer) {
+    public void print (Product forProduct, Customer customer) {
         System.out.println("Customer" + " " + this.getFirstName() + " "
                 + this.getLastName() + "bought product.");
-        System.out.println("Fully paid!");
+        System.out.println("@\t" + forProduct.price + "\tFully paid!");
     }
 
     static public void updateNumberOfPatronage () {

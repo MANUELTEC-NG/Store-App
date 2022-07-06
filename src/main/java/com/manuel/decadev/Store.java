@@ -95,9 +95,8 @@ public class Store {
 
         Customer customer = new Customer("Sylva", "Dodo","Female",
                 "something@gmail.com", 234-421-494);
-        mary.print(biscuits.get(0));
-//        customer.print(customer);
-
+       // mary.print(biscuits.get(0));
+//        customer.print(customer)
     }
 
     public static int retry(Scanner scanner){

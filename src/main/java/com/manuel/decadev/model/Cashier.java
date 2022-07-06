@@ -3,8 +3,11 @@ package com.manuel.decadev.model;
 
 import com.manuel.decadev.model.Interface.IPrint;
 import com.manuel.decadev.model.ProductCataloque.Biscuit;
+import com.manuel.decadev.model.ProductCataloque.MainCatalogue;
 
-public class Cashier extends  Staff implements IPrint <Item>{
+import java.util.ArrayList;
+
+public class Cashier extends  Staff implements IPrint <Product, Customer>{
 
     final private short weeklyHour = 70;
     private static short allowableAbsentTimes = 2;
@@ -15,26 +18,22 @@ public class Cashier extends  Staff implements IPrint <Item>{
 
     }
 
-    public void sellProduct (Customer customer, String productName){
+    public void sellProduct (Customer toCustomer, Product purchasedProduct){
         // TODO
         // Implement the logic of cashier withdrawing money from customer's account
         // and removing product from catalogue
+        Product product = toCustomer.purchaseProduct(purchasedProduct.productName, purchasedProduct.manufacturer);
 
-        Biscuit selectedProduct = customer.handleProductSelection(productName);
 
     }
 
     public void receiveProductPayment( Customer customer, String product ){
 
-        Biscuit item = customer.handleProductSelection(product);
-       Item biscuit = customer.purchaseProduct("Biscuit", item.getProductNAme());
-        if (customer.makePayment(biscuit)){
-                print(biscuit);
-        }
     }
 
     @Override
-    public void print(Item item){
+    public void print(Product item, Customer customer){
+
         String desc = item.price + " " + item.manufacturer;
         System.out.println("Cashier Printing Receipt for Customer");
         System.out.println("________________________________________________________");
@@ -92,5 +91,24 @@ public class Cashier extends  Staff implements IPrint <Item>{
 
     public int retrieveWorkExperience() {
         return workExperience;
+    }
+
+    private void removeProductFromCatalogue(Product product){
+        ArrayList<Product> catalogue = MainCatalogue.sendProdCatalogue();
+        int size = catalogue.size();
+        int i = 0;
+
+        while (i < size){
+            Product p = catalogue.get(i);
+            if (p.productName.equals(product.productName)){
+                catalogue.remove(product);
+                // TODO
+                // check if true
+
+            }
+
+
+            i++;
+        }
     }
 }
