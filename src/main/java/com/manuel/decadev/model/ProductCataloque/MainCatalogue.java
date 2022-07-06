@@ -1,6 +1,7 @@
 package com.manuel.decadev.model.ProductCataloque;
 
 
+import com.manuel.decadev.Store;
 import com.manuel.decadev.model.Product;
 
 import java.io.FileInputStream;
@@ -8,7 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class MainCatalogue {
+public class MainCatalogue  {
 
     static ArrayList<Product> chocolateCatalogue;
     static  ArrayList<Product> oatmealCatalogue;
@@ -23,32 +24,6 @@ public class MainCatalogue {
     static  ArrayList<Product> wholeWheatCatalogue ;
     static ArrayList<Product> potatoChipsCatalogue;
 
-
-
-    public static void main(String[] args) throws IOException  {
-
-                partitionProductToCatalogues();
-
-        ///System.out.println(choco.size());
-        //System.out.println(CookieCatalogue.isSameThing());
-        System.out.println(CookieCatalogue.getChocoCatalogue().size());
-        System.out.printf("Total Amounts Chocolate %s \t Whole Wheat %s", CookieCatalogue.getTotalChocoQty(), CrackersCatalogue.getTotalWholeWheatQty());
-        System.out.println(CookieCatalogue.getArrowRootCatalogue().size());
-        System.out.println(CookieCatalogue.getOatCatalogue().size());
-        System.out.println("------------------------------------------");
-        System.out.println(BarsCatalogue.getCarrotCatalogue().size());
-        System.out.println(BarsCatalogue.getBranCatalogue().size());
-        System.out.println(BarsCatalogue.getBananaCatalogue().size());
-        System.out.println("----------------------------------------");
-        System.out.println(SnacksCatalogue.getPretzelCatalogue().size());
-        System.out.println("----------------------------------");
-        System.out.println(CrackersCatalogue.getWholeWheatCatalogue().size());
-        System.out.println(CrackersCatalogue.getPotatoChipCatalogue().size());
-
-
-
-
-    }
     private MainCatalogue(){
         try{
 
@@ -60,15 +35,36 @@ public class MainCatalogue {
 
     }
 
+    public static void displayRes() {
 
-    static private void partitionProductToCatalogues() throws  IOException{
+        System.out.println("Numbers of Chocolates in Chocolate Catalogue:\t" + CookieCatalogue.getChocoCatalogue().size());
+        System.out.println("Numbers of ArrowRoots in ArrowRoot Catalogue:\t" + CookieCatalogue.getArrowRootCatalogue().size());
+        System.out.println("Numbers of Oat in Oat Catalogue Catalogue:\t" + CookieCatalogue.getOatCatalogue().size());
+        System.out.println("------------------------------------------");
+        System.out.println("Numbers of Carrots in Carrot Catalogue:\t" + BarsCatalogue.getCarrotCatalogue().size());
+        System.out.println("Numbers of Bran in Bran Catalogue: \t" + BarsCatalogue.getBranCatalogue().size());
+        System.out.println("Numbers of Bananas in Banana Catalogue:\t" + BarsCatalogue.getBananaCatalogue().size());
+        System.out.println("----------------------------------------\t");
+        System.out.println("Numbers of Pretzels in Pretzel Catalogue:\t" + SnacksCatalogue.getPretzelCatalogue().size());
+        System.out.println("----------------------------------");
+        System.out.println("Numbers of Whole Meat in Whole Meat Catalogue:\t" + CrackersCatalogue.getWholeWheatCatalogue().size());
+        System.out.println("Numbers of Potatoes in Potato Catalogue:\t" +  CrackersCatalogue.getPotatoChipCatalogue().size());
+
+
+
+
+    }
+
+
+
+    public static void partitionProductToCatalogues() throws  IOException{
 
         ArrayList<String> totalCategory = new ArrayList<>();
 
           chocolateCatalogue = CookieCatalogue.getChocoCatalogue();
 
           try(
-                  FileInputStream fileInputStream = new FileInputStream("/Users/dec/IdeaProjects/Store-App/sampledatafoodsales.csv.csv");
+                  FileInputStream fileInputStream = new FileInputStream("/Users/dec/IdeaProjects/Store-App/src/main/java/com/manuel/decadev/resources/sampledatafoodsales.csv.csv");
 
                   Scanner scanner = new Scanner(fileInputStream);
 
@@ -82,28 +78,28 @@ public class MainCatalogue {
                   double unitPrice = Double.parseDouble(productData[6]);
                   double totalPrice = Double.parseDouble(productData[7]);
 
-                  if (!(totalCategory.contains(categoryName))) {
-                      totalCategory.add(categoryName);
-                  }
 
                   if ( categoryName.equals("cookies")){
                       if (productName.equals("chocolate chip")){
                           chocolateCatalogue = CookieCatalogue.getChocoCatalogue();
-                          chocolateCatalogue.add(new Product((int)unitPrice, productName,
-                                  "Yoyo", 2021, categoryName));
+                          Product chocolate = new Product((int)unitPrice, productName,
+                                  "Yoyo", 2021, categoryName);
+                          chocolateCatalogue.add(chocolate);
                           CookieCatalogue.setTotalChocoQty(CookieCatalogue.getTotalChocoQty() + productQty);
                       } else if (productName.equals("oatmeal raisin")){
 
                           oatmealCatalogue = CookieCatalogue.getOatCatalogue();
-                          oatmealCatalogue.add(new Product((int)unitPrice, productName,
-                                  "Yoyo", 2021, categoryName));
+                          Product oatmeal = new Product((int)unitPrice, productName,
+                                  "Yoyo", 2021, categoryName);
+                          oatmealCatalogue.add(oatmeal);
                           CookieCatalogue.setTotalOatQuantity(CookieCatalogue.getTotalOatQuantity() + productQty);
 
                       } else if (productName.equals("arrowroot")){
 
                           arrowRootCatalogue = CookieCatalogue.getArrowRootCatalogue();
-                          arrowRootCatalogue.add(new Product((int)unitPrice, productName,
-                                  "Yoyo", 2021, categoryName));
+                          Product arrowroot =new Product((int)unitPrice, productName,
+                                  "Yoyo", 2021, categoryName);
+                          arrowRootCatalogue.add(arrowroot);
                           CookieCatalogue.setTotalArrowRootQty(CookieCatalogue.getTotalArrowRootQty() + productQty);
 
                       }
@@ -191,7 +187,7 @@ public class MainCatalogue {
 
      }
 
-    private static ArrayList<Product> selectProduct(String productName){
+    public static ArrayList<Product> selectProduct(String productName){
 
         String name = productName.trim().toLowerCase();
         switch (name){
@@ -225,6 +221,7 @@ public class MainCatalogue {
     }
 
     public static Product searchCatalogue(String productName, String manufacturer){
+
         ArrayList<Product> catalogue = selectProduct(productName);
         // TODO
         // check non null here

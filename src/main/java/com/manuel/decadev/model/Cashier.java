@@ -2,7 +2,6 @@ package com.manuel.decadev.model;
 
 
 import com.manuel.decadev.model.Interface.IPrint;
-import com.manuel.decadev.model.ProductCataloque.Biscuit;
 import com.manuel.decadev.model.ProductCataloque.MainCatalogue;
 
 import java.util.ArrayList;

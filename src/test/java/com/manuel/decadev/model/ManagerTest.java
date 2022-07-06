@@ -1,17 +1,14 @@
 package com.manuel.decadev.model;
 
-import com.manuel.decadev.model.ProductCataloque.Biscuit;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class ManagerTest extends Staff {
     private static Cashier mary;
-    private static ArrayList<Biscuit> biscuits;
+
 
     public ManagerTest(String firstName, String lastName, String gender, String department, String role, int id) {
         super(firstName, lastName, gender, department, role, id);

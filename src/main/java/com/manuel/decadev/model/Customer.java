@@ -1,9 +1,7 @@
 package com.manuel.decadev.model;
 
 import com.manuel.decadev.model.Interface.IPrint;
-import com.manuel.decadev.model.ProductCataloque.Biscuit;
 import com.manuel.decadev.model.ProductCataloque.MainCatalogue;
-import com.manuel.decadev.model.ProductCataloque.ProductCatalogue;
 
 import java.util.ArrayList;
 
@@ -12,7 +10,7 @@ public class Customer extends Person implements IPrint <Product, Customer> {
     private String email;
     private double phone;
 
-    ArrayList<Biscuit> biscuits;
+
 
 
     public Customer(String firstName, String lastName, String gender, String email, double phone) {
