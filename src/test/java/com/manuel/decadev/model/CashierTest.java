@@ -15,6 +15,8 @@ class CashierTest extends Staff {
 
     @BeforeEach
     void setUp() {
+
+
     }
 
     @AfterEach

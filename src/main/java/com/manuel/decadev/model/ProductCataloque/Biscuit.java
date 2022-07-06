@@ -1,8 +1,8 @@
 package com.manuel.decadev.model.ProductCataloque;
 
-import com.manuel.decadev.model.Product;
+import com.manuel.decadev.model.Item;
 
-public class Biscuit extends Product {
+public class Biscuit extends Item {
 
 
     private  int serialNo;

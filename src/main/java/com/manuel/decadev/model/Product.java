@@ -1,20 +1,20 @@
 package com.manuel.decadev.model;
 
-public abstract class Product {
-   protected String category = "";
-    protected int manufacturingDate = 0;
-    protected String manufacturer = "";
-    protected int price = 0;
 
-public Product(int price, String manufacturer, int manufacturingDate, String productCategory){
-    this.category = category;
-    this.manufacturingDate = manufacturingDate;
-    this.manufacturer = manufacturer;
-    this.price = price;
-}
+public class Product extends Item {
 
-    public abstract boolean hasPositiveBrandReview();
+    public double price = 0;
+    public String productName;
 
 
+    public Product(int price, String productName, String manufacturer, int manufacturingDate, String productCategory) {
+        super(price, manufacturer, manufacturingDate, productCategory);
+        this.price = price;
+        this.productName = productName;
+    }
 
+    @Override
+    public boolean hasPositiveBrandReview() {
+        return false;
+    }
 }

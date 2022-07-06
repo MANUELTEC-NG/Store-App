@@ -4,14 +4,11 @@ package com.manuel.decadev.model;
 import com.manuel.decadev.model.Interface.IPrint;
 import com.manuel.decadev.model.ProductCataloque.Biscuit;
 
-import javax.lang.model.type.NullType;
-
-public class Cashier extends  Staff implements IPrint <Product>{
+public class Cashier extends  Staff implements IPrint <Item>{
 
     final private short weeklyHour = 70;
     private static short allowableAbsentTimes = 2;
     private int workExperience = 0;
-
 
     public Cashier(String firstName, String lastName, String department, String role, String gender, int compId) {
         super(firstName,lastName, gender, department, role, compId);
@@ -30,15 +27,15 @@ public class Cashier extends  Staff implements IPrint <Product>{
     public void receiveProductPayment( Customer customer, String product ){
 
         Biscuit item = customer.handleProductSelection(product);
-       Product biscuit = customer.purchaseProduct("Biscuit", item.getProductNAme());
+       Item biscuit = customer.purchaseProduct("Biscuit", item.getProductNAme());
         if (customer.makePayment(biscuit)){
                 print(biscuit);
         }
     }
 
     @Override
-    public void print(Product product){
-        String desc = product.price + " " + product.manufacturer;
+    public void print(Item item){
+        String desc = item.price + " " + item.manufacturer;
         System.out.println("Cashier Printing Receipt for Customer");
         System.out.println("________________________________________________________");
         System.out.println("Customer Bought a Product");

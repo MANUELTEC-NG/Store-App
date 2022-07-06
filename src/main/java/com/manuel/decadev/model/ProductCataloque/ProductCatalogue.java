@@ -1,9 +1,6 @@
 package com.manuel.decadev.model.ProductCataloque;
 
-import com.manuel.decadev.model.Product;
-
 import java.util.ArrayList;
-import java.util.List;
 
 public  class ProductCatalogue {
 
@@ -49,7 +46,5 @@ public  class ProductCatalogue {
         }
         return biscuitsCatalogue;
     }
-//    public static ArrayList<Gala> getGalaCatalogue(){
-//        return galaCatalogue;
-//    }
+
 }

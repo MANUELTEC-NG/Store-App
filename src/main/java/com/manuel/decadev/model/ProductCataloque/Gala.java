@@ -1,8 +1,8 @@
 package com.manuel.decadev.model.ProductCataloque;
 
-import com.manuel.decadev.model.Product;
+import com.manuel.decadev.model.Item;
 
-public class Gala extends Product {
+public class Gala extends Item {
 
 
     private String productNAme;
@@ -31,7 +31,7 @@ public class Gala extends Product {
         return true;
     };
 
-    public  int checkExpiry(Product p){
+    public  int checkExpiry(Item p){
 
         return 0;
     }

@@ -5,7 +5,6 @@ import com.manuel.decadev.model.ProductCataloque.Biscuit;
 import com.manuel.decadev.model.ProductCataloque.ProductCatalogue;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Customer extends Person implements IPrint <Customer> {
     static int numberOfPatronage = 0;
@@ -52,14 +51,14 @@ public class Customer extends Person implements IPrint <Customer> {
         return  null;
     }
 
-    public boolean makePayment (Product forProduct) {
+    public boolean makePayment (Item forItem) {
         // TODO
         //implement the logic of making payment
         // issue payment to the Store Bank Account
         updateNumberOfPatronage();
         return true;
     }
-    public void giveReview (Product productBrand) {
+    public void giveReview (Item itemBrand) {
         // TODO - implement logic of
         // customer giving review to product bought
     }
