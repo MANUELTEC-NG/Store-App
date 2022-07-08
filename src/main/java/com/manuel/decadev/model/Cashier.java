@@ -17,16 +17,21 @@ public class Cashier extends  Staff implements IPrint <Product, Customer>{
 
     }
 
+    public Cashier(){
+        super();
+    }
+
     public void sellProduct (Customer toCustomer, Product purchasedProduct){
         // TODO
         // Implement the logic of cashier withdrawing money from customer's account
         // and removing product from catalogue
-        Product product = toCustomer.purchaseProduct(purchasedProduct.productName, purchasedProduct.manufacturer);
+        Product product = toCustomer.purchaseProduct(purchasedProduct.name, purchasedProduct.manufacturer);
 
 
     }
 
     public void receiveProductPayment( Customer customer, String product ){
+
 
     }
 
@@ -68,19 +73,21 @@ public class Cashier extends  Staff implements IPrint <Product, Customer>{
         return super.getRole();
     }
 
-    public void resetCashierData(String resetFirst,
-                                 String resetLastName, int resetId){
-       super.setId(resetId);
-       this.setFirstName(resetFirst);
-       this.setLastName(resetLastName);
 
-    }
 
     @Override
     public boolean isBonafideStaff(Staff staff){
         Cashier cashier = (Cashier) staff;
-        return cashier.getId() == 0 &&
-                (cashier.getFirstName().equals("")) && cashier.getLastName().equals("");
+        boolean bonafide = false;
+        int id = cashier.getId();
+        String firstName = cashier.getFirstName();
+        String lastName = cashier.getLastName();
+        if( id != 0 && firstName != "" && lastName != "" ){
+            bonafide = true;
+            return bonafide;
+        }
+
+        return bonafide;
     }
 
     public int setWorkExperience(int years){
@@ -99,7 +106,7 @@ public class Cashier extends  Staff implements IPrint <Product, Customer>{
 
         while (i < size){
             Product p = catalogue.get(i);
-            if (p.productName.equals(product.productName)){
+            if (p.name.equals(product.name)){
                 catalogue.remove(product);
                 // TODO
                 // check if true

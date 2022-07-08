@@ -1,17 +1,15 @@
 package com.manuel.decadev.model;
 
 import com.manuel.decadev.model.Interface.IPrint;
-import com.manuel.decadev.model.ProductCataloque.MainCatalogue;
 
 import java.util.ArrayList;
+
+import static com.manuel.decadev.model.ProductCataloque.MainCatalogue.findCatalogueByName;
 
 public class Customer extends Person implements IPrint <Product, Customer> {
     static int numberOfPatronage = 0;
     private String email;
     private double phone;
-
-
-
 
     public Customer(String firstName, String lastName, String gender, String email, double phone) {
         super(firstName, lastName, gender);
@@ -58,10 +56,35 @@ public class Customer extends Person implements IPrint <Product, Customer> {
         // customer giving review to product bought
     }
 
+    public  Product searchCatalogue(String catalogueName, String productName, String manufacturer){
+
+        ArrayList<Product> catalogue = findCatalogueByName(catalogueName);
+        // TODO
+        // check non null here
+
+
+        String manufacturerName = manufacturer.trim().toLowerCase();
+        int catalogueSize = catalogue.size();
+        int index = 0;
+
+        while (index < catalogueSize){
+            Product product = catalogue.get(index);
+            if (product.getManufacturerName().equals(manufacturerName) &&
+                    product.name.equals(productName)){
+
+                return product;
+            }
+
+            index +=1;
+        }
+
+        return null;
+    }
+
     public Product handleProductSelection ( String productName, String searchBy){
 
         String searchQuery = searchBy.trim().toLowerCase();
-       Product product = MainCatalogue.searchCatalogue(productName, searchQuery);
+       Product product = this.searchCatalogue("chocolate", productName, searchQuery);
        if (product != null)
            return product;
 
@@ -71,8 +94,8 @@ public class Customer extends Person implements IPrint <Product, Customer> {
 
     @Override
     public void print (Product forProduct, Customer customer) {
-        System.out.println("Customer" + " " + this.getFirstName() + " "
-                + this.getLastName() + "bought product.");
+        System.out.println("Customer" + " " + super.firstName + " "
+                + super.lastName +" " + "bought product.");
         System.out.println("@\t" + forProduct.price + "\tFully paid!");
     }
 

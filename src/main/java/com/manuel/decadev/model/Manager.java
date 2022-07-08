@@ -39,14 +39,20 @@ public class Manager extends Staff {
      }
         return false;
     }
+    public void resetCashierData(Cashier cashier){
+        cashier.setId(0);
+        cashier.setLastName("");
+        cashier.setFirstName("");
 
-    public boolean fireEmployee(Cashier cashier, String resetFirst,
-                                String resetLastName, int resetId){
+
+    }
+
+    public boolean fireCashier(Cashier cashier){
         boolean bonafide = cashier.isBonafideStaff(cashier);
         if (!bonafide) {
-            short warn = cashier.getAllowableAbsentTimes();
-            if (warn > 0) {
-                cashier.resetCashierData(resetFirst, resetLastName, resetId);
+            short warningTimes = cashier.getAllowableAbsentTimes();
+            if (warningTimes > 0) {
+               // cashier.resetCashierData(resetFirst, resetLastName, resetId);
                 PrintHandler.outputHelperMethod("..................................");
                 PrintHandler.outputHelperMethod("A Cashier got fired Last Week. Record reset!");
                 String newRecord = cashier.getId() + " " + cashier.getFirstName() + " " + cashier.getLastName();

@@ -10,4 +10,6 @@ public abstract class Person {
         this.lastName = lastName;
         this.gender = gender;
     }
+
+    public Person(){}
 }

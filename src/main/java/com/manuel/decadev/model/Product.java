@@ -6,13 +6,13 @@ import java.util.Objects;
 public class Product extends Item {
 
     public double price = 0;
-    public String productName;
+    public String name;
 
 
-    public Product(int price, String productName, String manufacturer, int manufacturingDate, String productCategory) {
-        super(price, manufacturer, manufacturingDate, productCategory);
+    public Product(int price, String name, String manufacturer, int manufacturingDate, String productCategory) {
+        super(price, manufacturer.toLowerCase(), manufacturingDate, productCategory.toLowerCase());
         this.price = price;
-        this.productName = productName;
+        this.name = name.toLowerCase();
     }
 
     @Override
@@ -32,11 +32,11 @@ public class Product extends Item {
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
         return Double.compare(product.price, price) != 0 &&
-                productName.equals(product.productName);
+                name.equals(product.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(price, productName);
+        return Objects.hash(price, name);
     }
 }

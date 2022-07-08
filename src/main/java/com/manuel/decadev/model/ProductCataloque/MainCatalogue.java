@@ -55,8 +55,6 @@ public class MainCatalogue  {
 
     }
 
-
-
     public static void partitionProductToCatalogues() throws  IOException{
 
         ArrayList<String> totalCategory = new ArrayList<>();
@@ -85,7 +83,9 @@ public class MainCatalogue  {
                           Product chocolate = new Product((int)unitPrice, productName,
                                   "Yoyo", 2021, categoryName);
                           chocolateCatalogue.add(chocolate);
+
                           CookieCatalogue.setTotalChocoQty(CookieCatalogue.getTotalChocoQty() + productQty);
+
                       } else if (productName.equals("oatmeal raisin")){
 
                           oatmealCatalogue = CookieCatalogue.getOatCatalogue();
@@ -108,7 +108,7 @@ public class MainCatalogue  {
 
 
 
-                  if (categoryName.equals("bars")){
+                 else if (categoryName.equals("bars")){
                       if (productName.equals("carrot")){
                          carrotCatalogue = BarsCatalogue.getCarrotCatalogue();
                          Product carrot = new Product((int)unitPrice, productName,
@@ -135,7 +135,7 @@ public class MainCatalogue  {
                       }
                   }
 
-                  if (categoryName.equals("snacks")){
+                 else if (categoryName.equals("snacks")){
 
                       if (productName.equals("potato chips")){
 
@@ -159,7 +159,7 @@ public class MainCatalogue  {
                   }
 
 
-                  if (categoryName.equals("crackers")){
+                   else if (categoryName.equals("crackers")){
 
                       if (productName.equals("whole wheat")){
 
@@ -173,21 +173,13 @@ public class MainCatalogue  {
 
 
                   }
-
-
-
               }
 
           }
 
-
-
-//         }
-
-
      }
 
-    public static ArrayList<Product> selectProduct(String productName){
+    public static ArrayList<Product> findCatalogueByName(String productName){
 
         String name = productName.trim().toLowerCase();
         switch (name){
@@ -220,28 +212,6 @@ public class MainCatalogue  {
 
     }
 
-    public static Product searchCatalogue(String productName, String manufacturer){
-
-        ArrayList<Product> catalogue = selectProduct(productName);
-        // TODO
-        // check non null here
-
-
-        String manufacturerName = manufacturer.trim().toLowerCase();
-        int catalogueSize = catalogue.size();
-        int index = 0;
-
-        while (index < catalogueSize){
-            Product product = catalogue.get(index);
-            if (product.getManufacturerName().equals(manufacturerName)){
-                return product;
-            }
-
-            index +=1;
-        }
-
-        return null;
-    }
     public static ArrayList<Product> sendProdCatalogue(){
         // sending a particular catalogue to cashier for product
         // removal when item is bought by customer

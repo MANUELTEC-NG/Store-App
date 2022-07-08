@@ -16,6 +16,7 @@ public Staff(String firstName, String lastName,String gender, String department,
     this.department = department;
     this.role = role;
 }
+public Staff(){}
 
 //public void setGender (String gender){
 //    super.gender = gender;

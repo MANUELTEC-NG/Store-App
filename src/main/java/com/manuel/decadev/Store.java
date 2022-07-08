@@ -4,9 +4,11 @@ import com.manuel.decadev.model.Cashier;
 import com.manuel.decadev.model.Customer;
 import com.manuel.decadev.model.Handlers.PrintHandler;
 import com.manuel.decadev.model.Manager;
+import com.manuel.decadev.model.Product;
 import com.manuel.decadev.model.ProductCataloque.MainCatalogue;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Store  {
@@ -31,6 +33,12 @@ public class Store  {
 
         printHandler.outputHelperMethod("Product Successfully Loaded from file");
         MainCatalogue.displayRes();
+        Customer customer = new Customer("Micheal", "Jordan", "male", "fhfh@gmail", 3447844);
+
+
+
+        customer.purchaseProduct("cookie", "yoyo");
+
 
         interactWithManagerClass();
          interactWithCahierClass();
@@ -64,7 +72,7 @@ public class Store  {
         System.out.println("Here is an example of my last disciplinary action");
 
         //aManager.issueQuery(mary);
-        aManager.fireEmployee(cashier, "","",0);
+       // aManager.fireCashier(cashier, "","",0);
         //aManager.issueQuery(mary);
 
         System.out.println("#############################################################");
