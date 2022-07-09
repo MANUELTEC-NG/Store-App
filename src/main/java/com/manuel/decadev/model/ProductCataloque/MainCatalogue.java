@@ -56,15 +56,12 @@ public class MainCatalogue  {
     }
 
     public static void partitionProductToCatalogues() throws  IOException{
-
-        ArrayList<String> totalCategory = new ArrayList<>();
-
           chocolateCatalogue = CookieCatalogue.getChocoCatalogue();
 
           try(
                   FileInputStream fileInputStream = new FileInputStream("/Users/dec/IdeaProjects/Store-App/src/main/java/com/manuel/decadev/resources/sampledatafoodsales.csv.csv");
 
-                  Scanner scanner = new Scanner(fileInputStream);
+                  Scanner scanner = new Scanner(fileInputStream)
 
           ){
               while (scanner.hasNext()){
@@ -80,8 +77,7 @@ public class MainCatalogue  {
                   if ( categoryName.equals("cookies")){
                       if (productName.equals("chocolate chip")){
                           chocolateCatalogue = CookieCatalogue.getChocoCatalogue();
-                          Product chocolate = new Product((int)unitPrice, productName,
-                                  "Yoyo", 2021, categoryName);
+                          Product chocolate = new Product((int)unitPrice, productName, categoryName);
                           chocolateCatalogue.add(chocolate);
 
                           CookieCatalogue.setTotalChocoQty(CookieCatalogue.getTotalChocoQty() + productQty);
@@ -89,16 +85,14 @@ public class MainCatalogue  {
                       } else if (productName.equals("oatmeal raisin")){
 
                           oatmealCatalogue = CookieCatalogue.getOatCatalogue();
-                          Product oatmeal = new Product((int)unitPrice, productName,
-                                  "Yoyo", 2021, categoryName);
+                          Product oatmeal = new Product((int)unitPrice, productName, categoryName);
                           oatmealCatalogue.add(oatmeal);
                           CookieCatalogue.setTotalOatQuantity(CookieCatalogue.getTotalOatQuantity() + productQty);
 
                       } else if (productName.equals("arrowroot")){
 
                           arrowRootCatalogue = CookieCatalogue.getArrowRootCatalogue();
-                          Product arrowroot =new Product((int)unitPrice, productName,
-                                  "Yoyo", 2021, categoryName);
+                          Product arrowroot =new Product((int)unitPrice, productName, categoryName);
                           arrowRootCatalogue.add(arrowroot);
                           CookieCatalogue.setTotalArrowRootQty(CookieCatalogue.getTotalArrowRootQty() + productQty);
 
@@ -111,8 +105,7 @@ public class MainCatalogue  {
                  else if (categoryName.equals("bars")){
                       if (productName.equals("carrot")){
                          carrotCatalogue = BarsCatalogue.getCarrotCatalogue();
-                         Product carrot = new Product((int)unitPrice, productName,
-                                 "OkCarrot", 2021, categoryName);
+                         Product carrot = new Product((int)unitPrice, productName, categoryName);
                          carrotCatalogue.add(carrot);
 
                          BarsCatalogue.setTotalCarrotQty(BarsCatalogue.getTotalCarrotQty() + productQty);
@@ -120,16 +113,14 @@ public class MainCatalogue  {
                       } else if ( productName.equals("bran")){
 
                           branCatalogue = BarsCatalogue.getBranCatalogue();
-                          Product bran = new Product((int)unitPrice, productName,
-                                  "CoolBran", 2021, categoryName);
+                          Product bran = new Product((int)unitPrice, productName, categoryName);
                           branCatalogue.add(bran);
                           BarsCatalogue.setTotalBranQuantity(BarsCatalogue.getTotalBranQuantity() + productQty);
                       }
 
                       else if (productName.equals("banana")){
                           bananaCatalogue = BarsCatalogue.getBananaCatalogue();
-                          Product banana = new Product((int)unitPrice, productName,
-                                  "RiteFoods", 2021, categoryName);
+                          Product banana = new Product((int)unitPrice, productName, categoryName);
                           bananaCatalogue.add(banana);
                           BarsCatalogue.setTotalBananaQty(BarsCatalogue.getTotalBananaQty() + productQty);
                       }
@@ -140,16 +131,14 @@ public class MainCatalogue  {
                       if (productName.equals("potato chips")){
 
                           potatoChipsCatalogue = CrackersCatalogue.getPotatoChipCatalogue();
-                          Product potato = new Product((int)unitPrice, productName,
-                                  "Sweetz", 2021, categoryName);
+                          Product potato = new Product((int)unitPrice, productName, categoryName);
                           potatoChipsCatalogue.add(potato);
                           CrackersCatalogue.setTotalPotatoChipQty(CrackersCatalogue.getTotalPotatoChipQty() + productQty);
                       }
 
 
                       pretzelsCatalogue = SnacksCatalogue.getPretzelCatalogue();
-                      Product pretzel = new Product((int)unitPrice, productName,
-                              "PretzelFoods", 2021, categoryName);
+                      Product pretzel = new Product((int)unitPrice, productName, categoryName);
                       pretzelsCatalogue.add(pretzel);
 
                       SnacksCatalogue.setTotalPretzelQty(SnacksCatalogue.getTotalPretzelQty() + productQty);
@@ -164,11 +153,9 @@ public class MainCatalogue  {
                       if (productName.equals("whole wheat")){
 
                           wholeWheatCatalogue = CrackersCatalogue.getWholeWheatCatalogue();
-                          Product wheat = new Product((int)unitPrice, productName,
-                                  "WheatWezz", 2021, categoryName);
+                          Product wheat = new Product((int)unitPrice, productName, categoryName);
                           wholeWheatCatalogue.add(wheat);
                           CrackersCatalogue.setTotalWholeWheatQty(CrackersCatalogue.getTotalWholeWheatQty() + productQty);
-
                       }
 
 
@@ -185,7 +172,6 @@ public class MainCatalogue  {
         switch (name){
 
             case "chocolate":
-
                 return chocolateCatalogue;
             case "oatmeal":
                 return oatmealCatalogue;
@@ -205,8 +191,8 @@ public class MainCatalogue  {
                 return potatoChipsCatalogue;
 
             default:
-                return new ArrayList<Product>();
-
+               // return new ArrayList<Product>();
+                return null;
         }
 
 

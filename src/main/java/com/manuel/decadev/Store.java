@@ -1,10 +1,7 @@
 package com.manuel.decadev;
 
-import com.manuel.decadev.model.Cashier;
-import com.manuel.decadev.model.Customer;
+import com.manuel.decadev.model.*;
 import com.manuel.decadev.model.Handlers.PrintHandler;
-import com.manuel.decadev.model.Manager;
-import com.manuel.decadev.model.Product;
 import com.manuel.decadev.model.ProductCataloque.MainCatalogue;
 
 import java.io.IOException;
@@ -19,6 +16,19 @@ public class Store  {
     private static Customer customer;
     private static PrintHandler printHandler;
 
+    static ArrayList<Product> chocolateCatalogue;
+    static ArrayList<Product> oatmealCatalogue;
+    static ArrayList<Product> arrowRootCatalogue;
+
+    static ArrayList<Product> carrotCatalogue;
+    static ArrayList<Product> branCatalogue;
+    static ArrayList<Product> bananaCatalogue;
+
+    static ArrayList<Product> pretzelsCatalogue;
+
+    static ArrayList<Product> wholeWheatCatalogue;
+    static ArrayList<Product> potatoChipsCatalogue;
+
 
     public static void main(String[] args) {
         try {
@@ -31,17 +41,30 @@ public class Store  {
         }
 
 
-        printHandler.outputHelperMethod("Product Successfully Loaded from file");
-        MainCatalogue.displayRes();
+        PrintHandler.outputHelperMethod("Product Successfully Loaded from file");
+        //MainCatalogue.displayRes();
+
+        //checkNonNull(chocolateCatalogue != null, "Chocolate Catalogue is empty");
+
         Customer customer = new Customer("Micheal", "Jordan", "male", "fhfh@gmail", 3447844);
+        customer.setProductNameOfChoice("chocolate chip");
+        try {
+            Product selectedProduct = customer.searchCatalogue( customer.getProductNameOfChoice(), "chocolate");
+            customer.setBankAccountInfo(new CusBankAccount(customer.getFirstName(),
+                    customer.getLastName(), 30000));
+            customer.purchaseProduct(selectedProduct.name, "chocolate");
+            ArrayList<Product> customerProduct = customer.forwardProductToCashier();
+
+            System.out.println(customerProduct.get(0));
 
 
+        } catch (NullPointerException ex){
+            ex.getMessage();
+        }
 
-        customer.purchaseProduct("cookie", "yoyo");
 
-
-        interactWithManagerClass();
-         interactWithCahierClass();
+       // interactWithManagerClass();
+         //interactWithCahierClass();
 
     }
 

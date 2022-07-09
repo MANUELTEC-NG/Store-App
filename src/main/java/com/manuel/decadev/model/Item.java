@@ -6,15 +6,21 @@ public abstract class Item {
     protected String manufacturer = "";
     protected int price = 0;
 
-public Item(int price, String manufacturer, int manufacturingDate, String productCategory){
-    this.category = category;
-    this.manufacturingDate = manufacturingDate;
-    this.manufacturer = manufacturer;
+public Item(int price, String productCategory){
+    this.category = productCategory;
     this.price = price;
 }
 
     public abstract boolean hasPositiveBrandReview();
 
+
+    public void setManufacturingDate(int manufacturingDate) {
+        this.manufacturingDate = manufacturingDate;
+    }
+
+    public void setManufacturer(String manufacturer) {
+        this.manufacturer = manufacturer;
+    }
 
 
 }

@@ -82,10 +82,28 @@ class CustomerTest extends Staff {
     }
 
     @Test
-    Product searchCatalogue(String catalogueName, String productName, String manufacturer){
+    void  assertThatSearchReturnAProduct(){
+        Product product = searchCatalogue();
+
+        assertNotNull(product);
+
+    }
+
+    @Test
+    void assertSearchReturnNullWhenProductNotFound(){
+
+
+    }
+
+
+    Product searchCatalogue(){
+        String catalogueName = "chocolate";
         ArrayList<Product> catalogue = MainCatalogue.findCatalogueByName(catalogueName);
+        String productName = catalogue.get(5).name;
+        String manufacturer = catalogue.get(5).manufacturer;
         assertNotNull(catalogue);
         assertTrue(catalogue.size() > 0);
+        String notFound = "";
 
         String manufacturerName = manufacturer.trim().toLowerCase();
         int catalogueSize = catalogue.size();
@@ -93,18 +111,27 @@ class CustomerTest extends Staff {
         int index = 0;
 
         while (index < catalogueSize){
-            Product product = catalogue.get(index);
+            Product product = catalogue.get(5);
+
+            //assertEquals(product.name ,productName);
+            //assertEquals(product.manufacturer, manufacturer);
+
             if (product.getManufacturerName().equals(manufacturerName) &&
                     product.name.equals(productName)){
-                assertEquals(product.name, productName);
+                System.out.println(productName);
+                System.out.println(manufacturer);
+                assertTrue(product.name.equals(productName));
                 assertEquals(product.manufacturer, manufacturer);
-
+                assertNotNull(product);
 
                 return product;
             }
 
             index +=1;
         }
+
+        notFound = "Product Not In Catalogue";
+        assertNotNull(notFound);
 
         return null;
     }

@@ -25,15 +25,11 @@ public class Cashier extends  Staff implements IPrint <Product, Customer>{
         // TODO
         // Implement the logic of cashier withdrawing money from customer's account
         // and removing product from catalogue
-        Product product = toCustomer.purchaseProduct(purchasedProduct.name, purchasedProduct.manufacturer);
+      //  Product product = toCustomer.purchaseProduct(purchasedProduct.name, purchasedProduct.manufacturer);
 
 
     }
 
-    public void receiveProductPayment( Customer customer, String product ){
-
-
-    }
 
     @Override
     public void print(Product item, Customer customer){
@@ -57,7 +53,7 @@ public class Cashier extends  Staff implements IPrint <Product, Customer>{
     }
 
     public void setAllowableAbsentTimes(short allowableAbsentTimes) {
-        this.allowableAbsentTimes = allowableAbsentTimes;
+        Cashier.allowableAbsentTimes = allowableAbsentTimes;
     }
 
     public short getWeeklyHour() {

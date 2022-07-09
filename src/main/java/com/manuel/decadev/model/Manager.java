@@ -67,9 +67,7 @@ public class Manager extends Staff {
 
     @Override
     public boolean canWorkOverTime(){
-    if(cashier.getRole().equals("Cashier") && (cashier.getAllowableAbsentTimes() < 2))
-        return true;
-    return false;
+        return cashier.getRole().equals("Cashier") && (cashier.getAllowableAbsentTimes() < 2);
     }
 
     @Override

@@ -9,8 +9,8 @@ public class Product extends Item {
     public String name;
 
 
-    public Product(int price, String name, String manufacturer, int manufacturingDate, String productCategory) {
-        super(price, manufacturer.toLowerCase(), manufacturingDate, productCategory.toLowerCase());
+    public Product(int price, String name, String productCategory) {
+        super(price,  productCategory.toLowerCase());
         this.price = price;
         this.name = name.toLowerCase();
     }
@@ -31,8 +31,8 @@ public class Product extends Item {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return Double.compare(product.price, price) != 0 &&
-                name.equals(product.name);
+        return Double.compare(product.price, this.price) != 0 &&
+                this.name.equals(product.name);
     }
 
     @Override
