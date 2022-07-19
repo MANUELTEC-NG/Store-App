@@ -6,6 +6,8 @@ import com.manuel.decadev.model.ProductCataloque.MainCatalogue;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Scanner;
 
 public class Store  {
@@ -13,26 +15,15 @@ public class Store  {
     private static Cashier cashier;
     private static Manager aManager;
     private static MainCatalogue mainCatalogue;
-    private static Customer customer;
-    private static PrintHandler printHandler;
 
-    static ArrayList<Product> chocolateCatalogue;
-    static ArrayList<Product> oatmealCatalogue;
-    static ArrayList<Product> arrowRootCatalogue;
-
-    static ArrayList<Product> carrotCatalogue;
-    static ArrayList<Product> branCatalogue;
-    static ArrayList<Product> bananaCatalogue;
-
-    static ArrayList<Product> pretzelsCatalogue;
-
-    static ArrayList<Product> wholeWheatCatalogue;
-    static ArrayList<Product> potatoChipsCatalogue;
-
+    static Queue<Customer> customersInQueue = new LinkedList<>();
 
     public static void main(String[] args) {
         try {
             MainCatalogue.partitionProductToCatalogues();
+            PrintHandler.outputHelperMethod("Product Successfully Loaded from file");
+            PrintHandler.outputHelperMethod("Store Open for Service");
+
         } catch (IOException fileNotFoundException){
 
             System.out.println("Exception thrown in reading file");
@@ -40,27 +31,28 @@ public class Store  {
             fileNotFoundException.getCause();
         }
 
+        customersInQueue();
 
-        PrintHandler.outputHelperMethod("Product Successfully Loaded from file");
+        cashier = new Cashier("Daniel", "Mary", "Sales Department",
+                "Cashier", "Female", 5032);
+
+
+
+
+
+
+
         //MainCatalogue.displayRes();
 
         //checkNonNull(chocolateCatalogue != null, "Chocolate Catalogue is empty");
 
         Customer customer = new Customer("Micheal", "Jordan", "male", "fhfh@gmail", 3447844);
-        customer.setProductNameOfChoice("chocolate chip");
-        try {
-            Product selectedProduct = customer.searchCatalogue( customer.getProductNameOfChoice(), "chocolate");
-            customer.setBankAccountInfo(new CusBankAccount(customer.getFirstName(),
-                    customer.getLastName(), 30000));
-            customer.purchaseProduct(selectedProduct.name, "chocolate");
-            ArrayList<Product> customerProduct = customer.forwardProductToCashier();
+        CusBankAccount bankWallet = new CusBankAccount(customer.getFirstName(),
+                customer.getLastName(), 30000);
+                customer.setBankAccountInfo(bankWallet);
+                customer.promptInput();
+               // ArrayList<Product> customerProduct = customer.forwardProductToCashier();
 
-            System.out.println(customerProduct.get(0));
-
-
-        } catch (NullPointerException ex){
-            ex.getMessage();
-        }
 
 
        // interactWithManagerClass();
@@ -68,6 +60,16 @@ public class Store  {
 
     }
 
+    static void customersInQueue(){
+        Customer customer1 = new Customer("Micheal", "Jordan", "male", "fhfh@gmail", 1-243-2625);
+        Customer customer2 = new Customer("Adele", "Mars", "female", "fhfh@gmail", 123-324-356);
+        Customer customer3 = new Customer("Micheal", "Jordan", "male", "fhfh@gmail", 234-535-743);
+
+        customersInQueue.offer(customer1);
+        customersInQueue.offer(customer2);
+        customersInQueue.offer(customer3);
+
+    }
 
     public static void interactWithManagerClass(){
 

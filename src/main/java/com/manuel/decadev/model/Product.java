@@ -5,12 +5,13 @@ import java.util.Objects;
 
 public class Product extends Item {
 
-    public double price = 0;
-    public String name;
+    private double price = 0;
+    private String name;
+    private static int totalQty = 0;
 
 
-    public Product(int price, String name, String productCategory) {
-        super(price,  productCategory.toLowerCase());
+    public Product(double price, String name) {
+        super(price,  "");
         this.price = price;
         this.name = name.toLowerCase();
     }
@@ -25,6 +26,33 @@ public class Product extends Item {
         return super.manufacturer;
     }
 
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public static int getTotalQty() {
+        return totalQty;
+    }
+
+    public static void setTotalQty(int totalQty) {
+        Product.totalQty = totalQty;
+    }
+
+    public void setCategoryName(String categoryName){
+        super.category = categoryName;
+    }
 
     @Override
     public boolean equals(Object o) {

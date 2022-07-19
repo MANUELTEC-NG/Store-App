@@ -30,11 +30,16 @@ public class Cashier extends  Staff implements IPrint <Product, Customer>{
 
     }
 
+    void receiveOrdersInfoFromCustomer(Customer customer){
+           ArrayList<String> intendedOrders = customer.getProductChoices();
+           ArrayList<Integer> correspondingQty = customer.getItemQuantity();
+    }
+
 
     @Override
     public void print(Product item, Customer customer){
 
-        String desc = item.price + " " + item.manufacturer;
+        String desc = item.getPrice() + " " + item.manufacturer;
         System.out.println("Cashier Printing Receipt for Customer");
         System.out.println("________________________________________________________");
         System.out.println("Customer Bought a Product");
@@ -69,8 +74,6 @@ public class Cashier extends  Staff implements IPrint <Product, Customer>{
         return super.getRole();
     }
 
-
-
     @Override
     public boolean isBonafideStaff(Staff staff){
         Cashier cashier = (Cashier) staff;
@@ -90,7 +93,6 @@ public class Cashier extends  Staff implements IPrint <Product, Customer>{
         return this.workExperience = years;
     }
 
-
     public int retrieveWorkExperience() {
         return workExperience;
     }
@@ -102,7 +104,7 @@ public class Cashier extends  Staff implements IPrint <Product, Customer>{
 
         while (i < size){
             Product p = catalogue.get(i);
-            if (p.name.equals(product.name)){
+            if (p.getName().equals(product.getName())){
                 catalogue.remove(product);
                 // TODO
                 // check if true
