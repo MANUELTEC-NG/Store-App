@@ -168,7 +168,7 @@ public class MainCatalogue  {
             //System.out.println("current capacity " + categoryName.size());
         }
 
-    public static boolean checkProductAvailability(String productName){
+    public static boolean isProductInStore(String productName){
 
         String name = productName.trim().toLowerCase();
         int size = productsInStore.size();

@@ -5,7 +5,6 @@ import com.manuel.decadev.model.Handlers.PrintHandler;
 import com.manuel.decadev.model.ProductCataloque.MainCatalogue;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
@@ -17,6 +16,7 @@ public class Store  {
     private static MainCatalogue mainCatalogue;
 
     static Queue<Customer> customersInQueue = new LinkedList<>();
+    static CusBankAccount bankWallet;
 
     public static void main(String[] args) {
         try {
@@ -31,10 +31,11 @@ public class Store  {
             fileNotFoundException.getCause();
         }
 
-        customersInQueue();
+        setUpCustomers();
 
         cashier = new Cashier("Daniel", "Mary", "Sales Department",
                 "Cashier", "Female", 5032);
+        attendToCustomerFIFO();
 
 
 
@@ -47,10 +48,10 @@ public class Store  {
         //checkNonNull(chocolateCatalogue != null, "Chocolate Catalogue is empty");
 
         Customer customer = new Customer("Micheal", "Jordan", "male", "fhfh@gmail", 3447844);
-        CusBankAccount bankWallet = new CusBankAccount(customer.getFirstName(),
+         bankWallet = new CusBankAccount(customer.getFirstName(),
                 customer.getLastName(), 30000);
                 customer.setBankAccountInfo(bankWallet);
-                customer.promptInput();
+                //customer.promptInput();
                // ArrayList<Product> customerProduct = customer.forwardProductToCashier();
 
 
@@ -60,11 +61,38 @@ public class Store  {
 
     }
 
-    static void customersInQueue(){
+    private static void attendToCustomerFIFO() {
+
+        for (int i = 0; i < customersInQueue.size(); i += 1) {
+
+            cashier.receiveOrdersInfoFromCustomer(customersInQueue.element());
+            // remove customer from queue next
+            PrintHandler.outputHelperMethod( customersInQueue.size() + " Customers Are Queued");
+            customersInQueue.poll();
+            PrintHandler.outputHelperMethod(customersInQueue.size() + " Customers Are Remaining");
+
+        }
+    }
+
+    static void setUpCustomers(){
         Customer customer1 = new Customer("Micheal", "Jordan", "male", "fhfh@gmail", 1-243-2625);
         Customer customer2 = new Customer("Adele", "Mars", "female", "fhfh@gmail", 123-324-356);
         Customer customer3 = new Customer("Micheal", "Jordan", "male", "fhfh@gmail", 234-535-743);
+        customer1.setBankAccountInfo(bankWallet);
+        customer2.setBankAccountInfo(bankWallet);
+        customer3.setBankAccountInfo(bankWallet);
+        if (doManualInputFromCus()) {
+            customer1.getProductChoices().clear();
+            customer2.getProductChoices().clear();
+            customer3.getProductChoices().clear();
+            customer1.getItemQuantity().clear();
+            customer2.getItemQuantity().clear();
+            customer3.getItemQuantity().clear();
 
+            customer1.promptInput();
+            customer2.promptInput();
+            customer3.promptInput();
+        }
         customersInQueue.offer(customer1);
         customersInQueue.offer(customer2);
         customersInQueue.offer(customer3);
@@ -153,5 +181,15 @@ public class Store  {
                 "Press Any key to quit\n");
      */
 
+    }
+
+    static boolean doManualInputFromCus(){
+        Scanner input = new Scanner(System.in);
+        System.out.println("Auto Input ? ");
+        String res = input.nextLine().toLowerCase();
+        if (!res.equals("yes")){
+            return true;
+        }
+        return false;
     }
 }

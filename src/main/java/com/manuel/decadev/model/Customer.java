@@ -5,24 +5,23 @@ import com.manuel.decadev.model.ProductCataloque.MainCatalogue;
 
 import java.util.*;
 
-import static com.manuel.decadev.model.ProductCataloque.MainCatalogue.checkProductAvailability;
-
 public class Customer extends Person implements IPrint <Product, Customer> {
     static int numberOfPatronage = 0;
     private final String email;
     private final double phone;
 
     // customer stating what he wants to buy
-    private ArrayList<String> productNameOfChoice = new ArrayList<>();
-    private ArrayList<Integer> itemQuantity = new ArrayList<>();
     private double priceBudget = 0;
     private int quantityOfProduct = 0;
-    public  ArrayList<Product> productShelve = new ArrayList<>();
-    Map<String, ArrayList<Product>> shelve;
-    CusBankAccount bankInfo;
+    public boolean isValidated = false;
+     CusBankAccount bankInfo;
+
     List<Product> custCart = new ArrayList<>();
+    private ArrayList<String> productNameOfChoice = new ArrayList<>();
+    private ArrayList<Integer> itemQuantity = new ArrayList<>();
 
-
+    ArrayList<Product> productShelve;
+   // List<Product>
     public Customer(String firstName, String lastName, String gender, String email, double phone) {
         super(firstName, lastName, gender);
         this.firstName = firstName;
@@ -57,7 +56,7 @@ public class Customer extends Person implements IPrint <Product, Customer> {
         return custCart;
     }
 
-    public String makePayment (Product item) {
+    public String makePayment (Product item, int quantity) {
         // TODO
         //implement the logic of making payment
         // issue payment to the Store Bank Account
@@ -65,71 +64,26 @@ public class Customer extends Person implements IPrint <Product, Customer> {
         String notifMsg = "Issues with making payment";
         if (hasBalance()){
             double balance = bankInfo.getBankBalance();
-            double productPrice = item.getPrice();
-            this.bankInfo.setBankBalance(balance - productPrice );
+            double totalPrice = item.getPrice() * quantity;
+            this.bankInfo.setBankBalance(balance - totalPrice );
             System.out.println("Payment made successfully");
             System.out.println("$" + item.getPrice() + " " + "charged from" + " " + bankInfo.getCustomerFName() + " Bank Account");
             notifMsg = "Payment Successful";
             updateNumberOfPatronage();
 
+        } else {
+            System.out.println("Can't process orders \n Not enough fund in account");
         }
 
 
         return notifMsg;
     }
+
     public void giveReview (Product itemBrand) {
         // TODO - implement logic of
         // customer giving review to product bought
     }
 
-    public  Product searchCatalogueForProduct(String productName ) {
-        boolean found = MainCatalogue.checkProductAvailability(productName);
-
-        if (!found) {
-            System.out.println("Sorry, the Product is not available at this time");
-            throw  new NullPointerException("Product Not Returned");
-        }
-        for (String choice : productNameOfChoice) {
-            // System.out.println(Str.matches("(.*)Tutorials(.*)"));
-            // Cookie
-            boolean CHOCO = choice.matches("(.*)choco(.*)");
-            boolean ARR = choice.matches("(.*)Arr(.*)");
-            boolean OATMEAL = choice.matches("(.*)oat(.*)");
-
-            // Bars
-            boolean CARROT = choice.matches("(.*)car(.*)");
-            boolean BRAN = choice.matches("(.*)bran(.*)");
-            boolean BANANA = choice.matches("(.*)ban(.*)");
-
-            //Snacks
-            boolean POTATO = choice.matches("(.*)po(.*)");
-            boolean PRETZEL = choice.matches("(.*)pret(.*)");
-
-            //Crackers
-            boolean WHOLE = choice.matches("(.*)whole(.*)");
-            boolean WHEAT = choice.matches("(.*)whea(.*)");
-
-
-            if (CHOCO || ARR || OATMEAL){
-               productShelve = MainCatalogue.getStoreShelve().get("cookie");
-                findMatchingProduct(productShelve, choice);
-           } else if (CARROT || BRAN || BANANA){
-               productShelve =  MainCatalogue.getStoreShelve().get("bars");
-               findMatchingProduct(productShelve, choice);
-
-            } else if (POTATO || PRETZEL){
-                productShelve =  MainCatalogue.getStoreShelve().get("snacks");
-                findMatchingProduct(productShelve, choice);
-            } else if (WHOLE || WHEAT){
-                productShelve =  MainCatalogue.getStoreShelve().get("crackers");
-                findMatchingProduct(productShelve, choice);
-            }
-
-
-        }
-
-        return null;
-    }
 
     private void findMatchingProduct(ArrayList<Product> list, String choice) {
 
@@ -197,6 +151,71 @@ public class Customer extends Person implements IPrint <Product, Customer> {
 
     public ArrayList<Integer> getItemQuantity() {
         return itemQuantity;
+    }
+
+   public void selectProductForPurchase(Product name) throws Exception {
+        if (!this.isValidated){
+            System.out.println("You are not permitted for purchase yet");
+            throw new Exception("Purchase permission not allowed");
+        }
+
+        //findMatchingProduct();
+
+
+   }
+
+    public  boolean searchCatalogueForProduct(String productName ){
+
+        boolean found = MainCatalogue.isProductInStore(productName);
+
+        if (!found) {
+            System.out.println("Sorry, the Product is not available at this time");
+            throw  new NullPointerException("Product Not Returned");
+        }
+        for (String choice : productNameOfChoice) {
+            // System.out.println(Str.matches("(.*)Tutorials(.*)"));
+            // Cookie
+            boolean CHOCO = choice.matches("(.*)choco(.*)");
+            boolean ARR = choice.matches("(.*)Arr(.*)");
+            boolean OATMEAL = choice.matches("(.*)oat(.*)");
+
+            // Bars
+            boolean CARROT = choice.matches("(.*)car(.*)");
+            boolean BRAN = choice.matches("(.*)bran(.*)");
+            boolean BANANA = choice.matches("(.*)ban(.*)");
+
+            //Snacks
+            boolean POTATO = choice.matches("(.*)po(.*)");
+            boolean PRETZEL = choice.matches("(.*)pret(.*)");
+
+            //Crackers
+            boolean WHOLE = choice.matches("(.*)whole(.*)");
+            boolean WHEAT = choice.matches("(.*)whea(.*)");
+
+
+
+            if (CHOCO || ARR || OATMEAL){
+                productShelve = MainCatalogue.getStoreShelve().get("cookie");
+                findMatchingProduct(productShelve, choice);
+                return  true;
+            } else if (CARROT || BRAN || BANANA){
+                productShelve =  MainCatalogue.getStoreShelve().get("bars");
+                findMatchingProduct(productShelve, choice);
+                return  true;
+            } else if (POTATO || PRETZEL){
+                productShelve =  MainCatalogue.getStoreShelve().get("snacks");
+                findMatchingProduct(productShelve, choice);
+                return  true;
+            } else if (WHOLE || WHEAT){
+                productShelve =  MainCatalogue.getStoreShelve().get("crackers");
+                findMatchingProduct(productShelve, choice);
+                return  true;
+            }
+
+
+        }
+
+        return false;
     }
 
     @Override
