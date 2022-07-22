@@ -1,26 +1,31 @@
 package com.manuel.decadev.model;
 
+import com.manuel.decadev.model.Handlers.PrintHandler;
 import com.manuel.decadev.model.Interface.IPrint;
 import com.manuel.decadev.model.ProductCataloque.MainCatalogue;
 
 import java.util.*;
 
-public class Customer extends Person implements IPrint <Product, Customer> {
+public class Customer extends Person  {
     static int numberOfPatronage = 0;
     private final String email;
     private final double phone;
+    private final String fullName = firstName +" "+lastName;
 
     // customer stating what he wants to buy
     private double priceBudget = 0;
     private int quantityOfProduct = 0;
     public boolean isValidated = false;
-     CusBankAccount bankInfo;
+    CusBankAccount bankInfo;
+    public int customerProdQty;
+    private double totalPrice = 0;
 
-    List<Product> custCart = new ArrayList<>();
-    private ArrayList<String> productNameOfChoice = new ArrayList<>();
-    private ArrayList<Integer> itemQuantity = new ArrayList<>();
-
+    List<Product> customerCart = new ArrayList<>();
+    private List<String> productNameOfChoice = new ArrayList<>();
+    private ArrayList<Integer> quantities = new ArrayList<>();
     ArrayList<Product> productShelve;
+
+
    // List<Product>
     public Customer(String firstName, String lastName, String gender, String email, double phone) {
         super(firstName, lastName, gender);
@@ -28,6 +33,7 @@ public class Customer extends Person implements IPrint <Product, Customer> {
         this.lastName = lastName;
         this.email = email;
         this.phone = phone;
+
 
     }
     public Customer(CusBankAccount bank, double phone,  String email){
@@ -51,24 +57,26 @@ public class Customer extends Person implements IPrint <Product, Customer> {
 
     }
 
-    public List<Product> forwardProductToCashier() {
-
-        return custCart;
-    }
 
     public String makePayment (Product item, int quantity) {
+        bankInfo.setCustomerFName(firstName);
+        bankInfo.setCustomerLastName(lastName);
+
         // TODO
         //implement the logic of making payment
         // issue payment to the Store Bank Account
-        System.out.println("Payment method entered");
+        System.out.println("Customer is making payment...");
         String notifMsg = "Issues with making payment";
         if (hasBalance()){
             double balance = bankInfo.getBankBalance();
-            double totalPrice = item.getPrice() * quantity;
-            this.bankInfo.setBankBalance(balance - totalPrice );
-            System.out.println("Payment made successfully");
-            System.out.println("$" + item.getPrice() + " " + "charged from" + " " + bankInfo.getCustomerFName() + " Bank Account");
+            double currentCharges = item.getPrice() * quantity;
+             totalPrice += currentCharges;
+            this.bankInfo.setBankBalance(balance - currentCharges );
             notifMsg = "Payment Successful";
+
+            PrintHandler.outputHelperMethod(notifMsg);
+
+            System.out.println("$" + (item.getPrice() * quantity) + " " + "charged from" + " " + bankInfo.getCustomerFName() + " Bank Account");
             updateNumberOfPatronage();
 
         } else {
@@ -89,7 +97,7 @@ public class Customer extends Person implements IPrint <Product, Customer> {
 
         for (Product product : list){
             if (product.getName().matches(choice) || product.getName().equals(choice)){
-                custCart.add(product);
+                customerCart.add(product);
                 //TODO
                 // Check if product added
                 return;
@@ -133,7 +141,7 @@ public class Customer extends Person implements IPrint <Product, Customer> {
             } else {
                 System.out.println(msg);
                 quantityOfProduct = input.nextInt();
-                itemQuantity.add(quantityOfProduct);
+                quantities.add(quantityOfProduct);
 
                 input.nextLine();
             }
@@ -149,8 +157,8 @@ public class Customer extends Person implements IPrint <Product, Customer> {
         System.out.println(quantityOfProduct);
     }
 
-    public ArrayList<Integer> getItemQuantity() {
-        return itemQuantity;
+    public ArrayList<Integer> getQuantities() {
+        return quantities;
     }
 
    public void selectProductForPurchase(Product name) throws Exception {
@@ -164,13 +172,25 @@ public class Customer extends Person implements IPrint <Product, Customer> {
 
    }
 
-    public  boolean searchCatalogueForProduct(String productName ){
+   public boolean hasChoicePreference(){
+        return (productNameOfChoice.size() != 0 && quantities.size() != 0);
+   }
+    public  String searchCatalogueForProduct(String productName ){
+
+        String COOKIES = "cookies";
+        String BARS = "bars";
+        String SNACKS = "snacks";
+        String CRACKERS = "crackers";
+        String NOTFOUND = "Product Not Under Any Category";
 
         boolean found = MainCatalogue.isProductInStore(productName);
 
         if (!found) {
             System.out.println("Sorry, the Product is not available at this time");
             throw  new NullPointerException("Product Not Returned");
+        }
+        if (productNameOfChoice.size() == 0){
+            productNameOfChoice = Cashier.forwardAutoPopulatedChoices();
         }
         for (String choice : productNameOfChoice) {
             // System.out.println(Str.matches("(.*)Tutorials(.*)"));
@@ -195,36 +215,30 @@ public class Customer extends Person implements IPrint <Product, Customer> {
 
 
             if (CHOCO || ARR || OATMEAL){
-                productShelve = MainCatalogue.getStoreShelve().get("cookie");
+                productShelve = MainCatalogue.getStoreShelve().get(COOKIES);
                 findMatchingProduct(productShelve, choice);
-                return  true;
+                return  COOKIES;
             } else if (CARROT || BRAN || BANANA){
-                productShelve =  MainCatalogue.getStoreShelve().get("bars");
+                productShelve =  MainCatalogue.getStoreShelve().get(BARS);
                 findMatchingProduct(productShelve, choice);
-                return  true;
+                return  BARS;
             } else if (POTATO || PRETZEL){
-                productShelve =  MainCatalogue.getStoreShelve().get("snacks");
+                productShelve =  MainCatalogue.getStoreShelve().get(SNACKS);
                 findMatchingProduct(productShelve, choice);
-                return  true;
+                return  SNACKS;
             } else if (WHOLE || WHEAT){
-                productShelve =  MainCatalogue.getStoreShelve().get("crackers");
+                productShelve =  MainCatalogue.getStoreShelve().get(CRACKERS);
                 findMatchingProduct(productShelve, choice);
-                return  true;
+                return  CRACKERS;
             }
 
 
         }
 
-        return false;
+        return NOTFOUND;
     }
 
-    @Override
-    public void print (Product forProduct, Customer customer) {
-        System.out.println("Customer" + " " + super.firstName + " "
-                + super.lastName +" " + "bought product.");
-//        System.out.println("@\t" + forProduct.price + "\tFully paid!");
-    }
-    public ArrayList<String> getProductChoices() {
+    public List<String> getProductChoices() {
         return productNameOfChoice;
     }
     public double getPriceBudget() {
@@ -242,8 +256,8 @@ public class Customer extends Person implements IPrint <Product, Customer> {
         return numberOfPatronage;
     }
 
-    public List<Product> getCustCart() {
-        return custCart;
+    public List<Product> getCustomerCart() {
+        return customerCart;
     }
 
     public String getEmail() {
@@ -261,6 +275,15 @@ public class Customer extends Person implements IPrint <Product, Customer> {
     public String getLastName() {
         return lastName;
     }
+
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
     public CusBankAccount getBankInfo() {
 
         if (bankInfo == null) {

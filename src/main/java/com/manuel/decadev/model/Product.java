@@ -1,13 +1,14 @@
 package com.manuel.decadev.model;
 
 
+import java.util.Comparator;
 import java.util.Objects;
 
-public class Product extends Item {
+public class Product extends Item implements Comparator<Product> {
 
     private double price = 0;
     private String name;
-    private static int totalQty = 0;
+    private  int qty = 0;
 
 
     public Product(double price, String name) {
@@ -42,16 +43,33 @@ public class Product extends Item {
         this.name = name;
     }
 
-    public static int getTotalQty() {
-        return totalQty;
+    public  int getQty() {
+        return qty;
     }
 
-    public static void setTotalQty(int totalQty) {
-        Product.totalQty = totalQty;
+    public  void setQty(int quantity) {
+        this.qty = quantity;
     }
 
     public void setCategoryName(String categoryName){
         super.category = categoryName;
+    }
+
+
+    @Override
+    public int compare(Product p1, Product p2) {
+
+        int quantity1 = p1.getQty();
+        int quantity2 = p2.getQty();
+
+        if (quantity1 > quantity2){
+            return  -1;
+        } else if (quantity1 < quantity2){
+            return 1;
+        } else {
+            return  0;
+        }
+
     }
 
     @Override

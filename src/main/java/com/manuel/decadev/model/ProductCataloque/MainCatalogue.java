@@ -63,11 +63,8 @@ public class MainCatalogue  {
             System.out.println( "Total of " +productsInStore.size() + " Products in store ");
             System.out.println("----------------------------------------\t");
 
-            System.out.println("Store Shelve");
-            System.out.println(storeShelve.keySet());
 
-            Object[] v = values.toArray();
-            System.out.println(v[0]);
+
         }
 
         public static void partitionProductToCatalogues () throws IOException {

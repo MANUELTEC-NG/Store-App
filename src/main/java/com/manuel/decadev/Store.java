@@ -5,9 +5,11 @@ import com.manuel.decadev.model.Handlers.PrintHandler;
 import com.manuel.decadev.model.ProductCataloque.MainCatalogue;
 
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Scanner;
+import java.util.*;
+
+//github remote name: week-3-task-Yhello-G
+// https://github.com/decadevs/week-3-task-Yhello-G
+
 
 public class Store  {
 
@@ -16,13 +18,27 @@ public class Store  {
     private static MainCatalogue mainCatalogue;
 
     static Queue<Customer> customersInQueue = new LinkedList<>();
-    static CusBankAccount bankWallet;
+
+    static PriorityQueue<Customer> priorityQueue = new PriorityQueue<Customer>(3, new CustomerComparator());
+    static CusBankAccount c1Wallet;
+    static CusBankAccount c2Wallet;
+    static CusBankAccount c3Wallet;
+
+
+   static Customer customer1 = new Customer("Micheal", "Jordan", "male", "fhfh@gmail", 1-243-2625);
+   static   Customer customer2 = new Customer("Adele", "Mars", "female", "fhfh@gmail", 123-324-356);
+   static   Customer customer3 = new Customer("David", "Malan", "male", "fhfh@gmail", 234-535-743);
+
+   static Scanner input = new Scanner(System.in);
 
     public static void main(String[] args) {
         try {
             MainCatalogue.partitionProductToCatalogues();
             PrintHandler.outputHelperMethod("Product Successfully Loaded from file");
+            MainCatalogue.displayRes();
             PrintHandler.outputHelperMethod("Store Open for Service");
+            System.out.println();
+            PrintHandler.outputHelperMethod(".............................................");
 
         } catch (IOException fileNotFoundException){
 
@@ -31,11 +47,28 @@ public class Store  {
             fileNotFoundException.getCause();
         }
 
-        setUpCustomers();
+
 
         cashier = new Cashier("Daniel", "Mary", "Sales Department",
                 "Cashier", "Female", 5032);
-        attendToCustomerFIFO();
+
+        c1Wallet = new CusBankAccount(customer1.getFirstName(),
+                customer1.getLastName(), 30000);
+        c2Wallet = new CusBankAccount(customer2.getFirstName(),
+                customer2.getLastName(), 30000);
+        c3Wallet =  new CusBankAccount(customer3.getFirstName(),
+                customer3.getLastName(), 30000);
+
+        customer1.setBankAccountInfo(c1Wallet);
+        customer2.setBankAccountInfo(c2Wallet);
+        customer3.setBankAccountInfo(c3Wallet);
+
+
+        setUpCustomers();
+        attendToCustomer(true);
+
+        // setUpCustomersPriority();
+        //attendToBasedOnPriority();
 
 
 
@@ -48,9 +81,9 @@ public class Store  {
         //checkNonNull(chocolateCatalogue != null, "Chocolate Catalogue is empty");
 
         Customer customer = new Customer("Micheal", "Jordan", "male", "fhfh@gmail", 3447844);
-         bankWallet = new CusBankAccount(customer.getFirstName(),
+         c1Wallet = new CusBankAccount(customer.getFirstName(),
                 customer.getLastName(), 30000);
-                customer.setBankAccountInfo(bankWallet);
+                customer.setBankAccountInfo(c1Wallet);
                 //customer.promptInput();
                // ArrayList<Product> customerProduct = customer.forwardProductToCashier();
 
@@ -61,43 +94,89 @@ public class Store  {
 
     }
 
-    private static void attendToCustomerFIFO() {
+    private static void attendToCustomer(boolean isSpecialCustomer) {
+        int numOfPeople = customersInQueue.size();
+        Customer specialCustomer = null;
 
-        for (int i = 0; i < customersInQueue.size(); i += 1) {
+        for (int i = 0; i < numOfPeople; i += 1) {
+            Customer aCustomer = customersInQueue.element();
+           specialCustomer = cashier.receiveOrdersInfoFromCustomer(aCustomer, isSpecialCustomer);
+           specialCustomer.customerProdQty += i*3;
 
-            cashier.receiveOrdersInfoFromCustomer(customersInQueue.element());
+           if (isSpecialCustomer && specialCustomer != null){
+               priorityQueue.offer(specialCustomer);
+           }
             // remove customer from queue next
-            PrintHandler.outputHelperMethod( customersInQueue.size() + " Customers Are Queued");
-            customersInQueue.poll();
-            PrintHandler.outputHelperMethod(customersInQueue.size() + " Customers Are Remaining");
 
+
+            PrintHandler.outputHelperMethod( customersInQueue.size() + " ->  Customers Are Queued Orderly");
+            aCustomer =  customersInQueue.poll();
+
+            PrintHandler.outputHelperMethod("Customer :" + aCustomer.getFirstName() + " " + aCustomer.getLastName() + " is Attended to by the Cashier");
+            PrintHandler.outputHelperMethod(customersInQueue.size() + " -> Customers Are Remaining");
+            PrintHandler.outputHelperMethod("------------------------------------------------");
+        }
+
+        PrintHandler.outputHelperMethod("Would you want to SAME OPERATION but on priority based scenario?");
+        String resp = input.nextLine();
+        if (resp.equals("yes")) {
+
+            attendToBasedOnPriority();
         }
     }
 
+
+
+    private static void attendToBasedOnPriority(){
+        int size = priorityQueue.size();
+        Customer specialCustomer;
+        int i = 0;
+        if (i == size-1)
+            System.out.println("Done with all the customers!");
+
+        for ( i = 0; i < size; i += 1) {
+
+
+            // remove customer from queue next
+            PrintHandler.outputHelperMethod("##### Simulating Cashier Selling to High Priority Customer #####");
+            PrintHandler.outputHelperMethod("Attending to Customers Based On Numbers Of Quantity They Want to Buy");
+
+            PrintHandler.outputHelperMethod( priorityQueue.size() + " ->  Customers Are Queued");
+
+            specialCustomer = priorityQueue.poll();
+            String fullName = specialCustomer.getFullName();
+            int qty = specialCustomer.customerProdQty;
+            PrintHandler.outputHelperMethod(  fullName +  ":"+ " buying " + qty + "  Attended to by the Cashier");
+            PrintHandler.outputHelperMethod(customersInQueue.size() + " -> Customers Are Remaining");
+            PrintHandler.outputHelperMethod("------------------------------------------------");
+        }
+    }
+
+
+
     static void setUpCustomers(){
-        Customer customer1 = new Customer("Micheal", "Jordan", "male", "fhfh@gmail", 1-243-2625);
-        Customer customer2 = new Customer("Adele", "Mars", "female", "fhfh@gmail", 123-324-356);
-        Customer customer3 = new Customer("Micheal", "Jordan", "male", "fhfh@gmail", 234-535-743);
-        customer1.setBankAccountInfo(bankWallet);
-        customer2.setBankAccountInfo(bankWallet);
-        customer3.setBankAccountInfo(bankWallet);
+         customer1.setBankAccountInfo(c1Wallet);
+        customer2.setBankAccountInfo(c1Wallet);
+        customer3.setBankAccountInfo(c1Wallet);
         if (doManualInputFromCus()) {
             customer1.getProductChoices().clear();
             customer2.getProductChoices().clear();
             customer3.getProductChoices().clear();
-            customer1.getItemQuantity().clear();
-            customer2.getItemQuantity().clear();
-            customer3.getItemQuantity().clear();
+            customer1.getQuantities().clear();
+            customer2.getQuantities().clear();
+            customer3.getQuantities().clear();
 
-            customer1.promptInput();
-            customer2.promptInput();
-            customer3.promptInput();
+//            customer1.promptInput();
+//            customer2.promptInput();
+//            customer3.promptInput();
         }
         customersInQueue.offer(customer1);
         customersInQueue.offer(customer2);
         customersInQueue.offer(customer3);
 
     }
+
+
 
     public static void interactWithManagerClass(){
 

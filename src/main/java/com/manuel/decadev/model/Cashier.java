@@ -6,24 +6,25 @@ import com.manuel.decadev.model.Interface.IPrint;
 import com.manuel.decadev.model.ProductCataloque.MainCatalogue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class Cashier extends  Staff implements IPrint <Product, Customer>{
+public class Cashier extends  Staff implements IPrint <Customer, Product>{
 
     final private short weeklyHour = 70;
     private static short allowableAbsentTimes = 2;
     private int workExperience = 0;
-    ArrayList<String> customersIntendedOrders = new ArrayList<>();
-    ArrayList<Integer> correspondingQty = new ArrayList<>();
+    static List<String> customersIntendedOrders;
+    List<Integer> correspondingQty ;
 
     private   ArrayList<Product> productShelve = new ArrayList<>();
-    private Map<String, Integer> prodoctsAvailableInStore;
+    private Map<String, Integer> storeInventories;
 
     //info for the customer in question
     List<Product> currentCustomerCart = new ArrayList<>();
-    Customer currentCustomer;
-    int currentCustomerQty;
+    public Customer currentCustomer;
+    public int currentCustomerQty;
 
     public Cashier(String firstName, String lastName, String department, String role, String gender, int compId) {
         super(firstName,lastName, gender, department, role, compId);
@@ -34,23 +35,25 @@ public class Cashier extends  Staff implements IPrint <Product, Customer>{
         super();
     }
 
-    private void sellProduct (){
+    private void sellProduct (String productName, String category){
         // TODO
         // Implement the logic of cashier withdrawing money from customer's account
         // and removing product from catalogue
         //  Product product = toCustomer.purchaseProduct(purchasedProduct.name, purchasedProduct.manufacturer);
         int qtyAvailableInStore;
-        prodoctsAvailableInStore = MainCatalogue.getStock();
+        storeInventories = MainCatalogue.getStock();
+        String selectedProductCategory = category.toLowerCase();
         int i = -1;
         for (Product product : currentCustomerCart){
             i += 1;
-            if (searchCatalogueForProduct(product.getName())){
-
-                qtyAvailableInStore = prodoctsAvailableInStore.get("cookie") - currentCustomerQty;
-                prodoctsAvailableInStore.put("cookie", qtyAvailableInStore);
+            if (checkInventory(product.getName())){
+                //TODO
+                // MAKE THE PASSED params dynamic
+                qtyAvailableInStore = storeInventories.get(productName) - currentCustomerQty;
+                storeInventories.put(selectedProductCategory, qtyAvailableInStore);
                 PrintHandler.outputHelperMethod("Product Successfully Bought");
                 PrintHandler.outputHelperMethod("Updated Quantity In Stock is : "
-                        + prodoctsAvailableInStore.get("cookie"));
+                        + storeInventories.get(selectedProductCategory));
             } else {
 
                 PrintHandler.outputHelperMethod("Something went wrong. \n Can't find "
@@ -60,45 +63,60 @@ public class Cashier extends  Staff implements IPrint <Product, Customer>{
 
     }
 
-    public void receiveOrdersInfoFromCustomer(Customer customer){
+    public Customer receiveOrdersInfoFromCustomer(Customer customer, boolean isSpecialCustomer){
         // customers already in normal queue is passed
         // extract their orders info
         // check availability of their intended product of choice
         //  sell
-
+        //customer.promptInput();
         //copies the content in the customer array to the cashier
+        String categoryName = "";
         int counter = -1;
-        customersIntendedOrders = new ArrayList<>(customer.getProductChoices());
-        correspondingQty = new ArrayList<>(customer.getItemQuantity());
+        if (customer.hasChoicePreference()) {
+            customersIntendedOrders = new ArrayList<>(customer.getProductChoices());
+            correspondingQty = new ArrayList<>(customer.getQuantities());
+        }
+        customersIntendedOrders = Arrays.asList("chocolate chip"/*, "bran", "banana"*/);
+        correspondingQty = Arrays.asList(5/*,6,10*/);
 
         for (String productName : customersIntendedOrders) {
-            boolean available =  searchCatalogueForProduct(productName);
-            if (available){
-                validateCustomerForPurchase(customer,true);
+            boolean available =  checkInventory(productName);
+
+            if (available) {
+                validateCustomerForPurchase(customer, true);
                 // cashier allows customer to go have the
-                customer.searchCatalogueForProduct(productName);
+                categoryName = customer.searchCatalogueForProduct(productName);
                 // the cart from this customer is returned
-                currentCustomerCart = customer.getCustCart();
-                // the reference of the customer is kept so he can be used for payment processing
-                for (Product product : currentCustomerCart){
-                    // customer account is charged with equivalent product amount
-                    currentCustomerQty = correspondingQty.get((counter + 1));
-                    customer.makePayment(product, currentCustomerQty);
-
-                    // removed from cart
-                    sellProduct();
-                }
-
-                currentCustomer = customer;
-
-            } else {
-                System.out.println("Your Orders didn't go through");
             }
         }
 
+        if (customer.getCustomerCart().size() != 0)
+            currentCustomerCart = customer.getCustomerCart();
+            // the reference of the customer is kept so he can be used for payment processing
+
+        for (Product product : currentCustomerCart){
+            currentCustomerQty = correspondingQty.get((counter + 1));
+            customer.customerProdQty = currentCustomerQty;
+            // customer account is charged with equivalent product amount
+            customer.makePayment(product, currentCustomerQty);
+            // removed from cart
+            sellProduct(product.getName(), categoryName);
+            counter += 1;
+        }
+
+
+        currentCustomer = customer;
+        print(customer, currentCustomerCart.get(0));
+
+        if (isSpecialCustomer) {
+            return currentCustomer;
+        }
+
+        return null;
     }
 
     private boolean isProductAvailability(ArrayList<Product> list, String choice) {
+
 
         for (Product product : list){
             if (product.getName().matches(choice) || product.getName().equals(choice)){
@@ -112,7 +130,7 @@ public class Cashier extends  Staff implements IPrint <Product, Customer>{
     }
 
     // hard code the product name here
-    public  boolean searchCatalogueForProduct(String productName ) {
+    public  boolean checkInventory(String productName ) {
         boolean found = MainCatalogue.isProductInStore(productName);
 
         if (!found) {
@@ -141,7 +159,8 @@ public class Cashier extends  Staff implements IPrint <Product, Customer>{
 
 
             if (CHOCO || ARR || OATMEAL){
-                productShelve = MainCatalogue.getStoreShelve().get("cookie");
+                Map<String,ArrayList <Product> >tempShelve = MainCatalogue.getStoreShelve();
+                productShelve = tempShelve.get("cookies");
                 isProductAvailability(productShelve, choice);
                 return  true;
             } else if (CARROT || BRAN || BANANA){
@@ -167,13 +186,20 @@ public class Cashier extends  Staff implements IPrint <Product, Customer>{
         customer.isValidated = remark;
     }
     @Override
-    public void print(Product item, Customer customer){
+    public void print(Customer c, Product product){
 
-        String desc = item.getPrice() + " " + item.manufacturer;
-        System.out.println("Cashier Printing Receipt for Customer");
+        System.out.println("Printing Receipt for Customer");
         System.out.println("________________________________________________________");
         System.out.println("Customer Bought a Product");
-        System.out.println(desc);
+        System.out.println("Customer: " + " " + c.getFullName() + " "+ "bought product.");
+        System.out.println("\t" + "$"+c.getTotalPrice() + " \tFully paid!");
+
+
+
+    }
+
+    static public List<String> forwardAutoPopulatedChoices() {
+        return customersIntendedOrders;
     }
 
     @Override
