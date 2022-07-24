@@ -112,12 +112,12 @@ public class Store  {
             PrintHandler.outputHelperMethod( customersInQueue.size() + " ->  Customers Are Queued Orderly");
             aCustomer =  customersInQueue.poll();
 
-            PrintHandler.outputHelperMethod("Customer :" + aCustomer.getFirstName() + " " + aCustomer.getLastName() + " is Attended to by the Cashier");
+            PrintHandler.outputHelperMethod("Customer : " + aCustomer.getFullName()+ " is Attended to by the Cashier");
             PrintHandler.outputHelperMethod(customersInQueue.size() + " -> Customers Are Remaining");
             PrintHandler.outputHelperMethod("------------------------------------------------");
         }
 
-        PrintHandler.outputHelperMethod("Would you want to SAME OPERATION but on priority based scenario?");
+        PrintHandler.outputHelperMethod("Would you want to see SAME OPERATION but on priority based scenario?");
         String resp = input.nextLine();
         if (resp.equals("yes")) {
 
@@ -141,13 +141,14 @@ public class Store  {
             PrintHandler.outputHelperMethod("##### Simulating Cashier Selling to High Priority Customer #####");
             PrintHandler.outputHelperMethod("Attending to Customers Based On Numbers Of Quantity They Want to Buy");
 
-            PrintHandler.outputHelperMethod( priorityQueue.size() + " ->  Customers Are Queued");
+            if (i == 0)
+                PrintHandler.outputHelperMethod( priorityQueue.size() + " ->  Customers Are Queued");
 
             specialCustomer = priorityQueue.poll();
             String fullName = specialCustomer.getFullName();
             int qty = specialCustomer.customerProdQty;
-            PrintHandler.outputHelperMethod(  fullName +  ":"+ " buying " + qty + "  Attended to by the Cashier");
-            PrintHandler.outputHelperMethod(customersInQueue.size() + " -> Customers Are Remaining");
+            PrintHandler.outputHelperMethod(  fullName +  ":"+ " buying " + qty + ".  Attended to by the Cashier");
+            PrintHandler.outputHelperMethod(priorityQueue.size() + " -> Customers Are Remaining");
             PrintHandler.outputHelperMethod("------------------------------------------------");
         }
     }

@@ -9,13 +9,6 @@ import java.util.*;
 public class MainCatalogue  {
 
 
-    public static ArrayList<Product> sendProdCatalogue(){
-        // sending a particular catalogue to cashier for product
-        // removal when item is bought by customer
-
-        return null;
-    }
-
 
 
         static private ArrayList<Product> cookiesShelve = new ArrayList<>();
@@ -34,7 +27,8 @@ public class MainCatalogue  {
 
         public static void main(String[] args) throws IOException {
             partitionProductToCatalogues();
-            displayRes();
+           // displayRes();
+            System.out.println("Values found? " + isProductInStore("bran"));
         }
 
         public static void displayRes () {
@@ -91,7 +85,7 @@ public class MainCatalogue  {
                     double totalPrice = Double.parseDouble(productData[7]);
 
 
-                    if (categoryName.equals(COOKIES)){
+                    if (categoryName.equals(COOKIES)) {
                         // check wether product name is already in the inner map
                         // if already exist, use the product name to have access to the catalogue
                         // then add the product based on product name
@@ -107,46 +101,41 @@ public class MainCatalogue  {
                         // Assert cookieShelve is added and that it holds values
 
 
-                    }
-
-                    else if (categoryName.equals(BARS)){
+                    } else if (categoryName.equals(BARS)) {
 
                         addProductToShelve(unitPrice, productName, barsShelve);
                         updateQuantityOfProduct(productsInStore, productName, productQty);
                         pushToShelves(BARS, storeShelve, barsShelve);
 
-                    }
-
-                    else if (categoryName.equals(SNACKS)){
+                    } else if (categoryName.equals(SNACKS)) {
 
                         addProductToShelve(unitPrice, productName, snacksShelve);
                         updateQuantityOfProduct(productsInStore, productName, productQty);
                         pushToShelves(SNACKS, storeShelve, snacksShelve);
 
-                    }
-                    else if (categoryName.equals(CRACKERS)){
+                    } else if (categoryName.equals(CRACKERS)) {
 
                         addProductToShelve(unitPrice, productName, crackersShelve);
                         updateQuantityOfProduct(productsInStore, CRACKERS, productQty);
                         pushToShelves(CRACKERS, storeShelve, crackersShelve);
-
                     }
-
                 }
-
-
-
             }
 
         }
 
-        static private void updateQuantityOfProduct(Map<String, Integer> stock, String productName, int updateFigure){
+        static private int updateQuantityOfProduct(Map<String, Integer> stock, String productName, int updateFigure){
+
+            int prevQtyInStock = 0;
             if (!stock.containsKey(productName)){
                 stock.put(productName, updateFigure);
+
             } else {
-                int numbInStock = stock.get(productName);
-                stock.put(productName, numbInStock + updateFigure);
+                prevQtyInStock = stock.get(productName);
+                stock.put(productName, prevQtyInStock + updateFigure);
             }
+
+            return prevQtyInStock;
         }
         static private void pushToShelves(String productCategory, Map<String, ArrayList<Product> > mainShelve, ArrayList<Product> subShelve ){
             String category = productCategory.toLowerCase();
@@ -158,11 +147,12 @@ public class MainCatalogue  {
             //shelves.get(category)
         }
 
-        static private void addProductToShelve(double unitPrice, String productName,
+        static private Product addProductToShelve(double unitPrice, String productName,
                                                ArrayList<Product> categoryName){
             Product product =  new Product(unitPrice, productName);
             categoryName.add(product);
-            //System.out.println("current capacity " + categoryName.size());
+
+            return product;
         }
 
     public static boolean isProductInStore(String productName){

@@ -16,15 +16,20 @@ public class Cashier extends  Staff implements IPrint <Customer, Product>{
     private static short allowableAbsentTimes = 2;
     private int workExperience = 0;
     static List<String> customersIntendedOrders;
-    List<Integer> correspondingQty ;
+
 
     private   ArrayList<Product> productShelve = new ArrayList<>();
     private Map<String, Integer> storeInventories;
 
     //info for the customer in question
     List<Product> currentCustomerCart = new ArrayList<>();
-    public Customer currentCustomer;
+
+    List<Integer> correspondingQty  =  new ArrayList<>();
+
     public int currentCustomerQty;
+
+    public Customer currentCustomer;
+
 
     public Cashier(String firstName, String lastName, String department, String role, String gender, int compId) {
         super(firstName,lastName, gender, department, role, compId);
@@ -35,7 +40,7 @@ public class Cashier extends  Staff implements IPrint <Customer, Product>{
         super();
     }
 
-    private void sellProduct (String productName, String category){
+    private void sellProduct (String productName, String category) throws Exception{
         // TODO
         // Implement the logic of cashier withdrawing money from customer's account
         // and removing product from catalogue
@@ -49,11 +54,13 @@ public class Cashier extends  Staff implements IPrint <Customer, Product>{
             if (checkInventory(product.getName())){
                 //TODO
                 // MAKE THE PASSED params dynamic
+                PrintHandler.outputHelperMethod("Current Quantity In Stock : "
+                        + storeInventories.get(productName));
+
                 qtyAvailableInStore = storeInventories.get(productName) - currentCustomerQty;
                 storeInventories.put(selectedProductCategory, qtyAvailableInStore);
                 PrintHandler.outputHelperMethod("Product Successfully Bought");
-                PrintHandler.outputHelperMethod("Updated Quantity In Stock is : "
-                        + storeInventories.get(selectedProductCategory));
+
             } else {
 
                 PrintHandler.outputHelperMethod("Something went wrong. \n Can't find "
@@ -68,48 +75,66 @@ public class Cashier extends  Staff implements IPrint <Customer, Product>{
         // extract their orders info
         // check availability of their intended product of choice
         //  sell
-        //customer.promptInput();
+        customer.promptInput();
         //copies the content in the customer array to the cashier
         String categoryName = "";
-        int counter = -1;
+
         if (customer.hasChoicePreference()) {
             customersIntendedOrders = new ArrayList<>(customer.getProductChoices());
             correspondingQty = new ArrayList<>(customer.getQuantities());
+        } else{
+            customersIntendedOrders = Arrays.asList("chocolate chip", "bran", "banana");
+             correspondingQty = Arrays.asList(5,6,10);
         }
-        customersIntendedOrders = Arrays.asList("chocolate chip"/*, "bran", "banana"*/);
-        correspondingQty = Arrays.asList(5/*,6,10*/);
 
-        for (String productName : customersIntendedOrders) {
-            boolean available =  checkInventory(productName);
+        boolean available = false;
+
+       for (String productName : customersIntendedOrders) {
+           try {
+               available = checkInventory(productName);
+
+           } catch (Exception ex){
+               ex.getMessage();
+           }
+       }
+
 
             if (available) {
                 validateCustomerForPurchase(customer, true);
                 // cashier allows customer to go have the
-                categoryName = customer.searchCatalogueForProduct(productName);
+                currentCustomerCart = customer.searchCatalogueForProduct(customersIntendedOrders);
                 // the cart from this customer is returned
             }
-        }
 
-        if (customer.getCustomerCart().size() != 0)
-            currentCustomerCart = customer.getCustomerCart();
+
+        if (currentCustomerCart.size() > 0) {
+
+            int counter = -1;
             // the reference of the customer is kept so he can be used for payment processing
 
-        for (Product product : currentCustomerCart){
-            currentCustomerQty = correspondingQty.get((counter + 1));
-            customer.customerProdQty = currentCustomerQty;
-            // customer account is charged with equivalent product amount
-            customer.makePayment(product, currentCustomerQty);
-            // removed from cart
-            sellProduct(product.getName(), categoryName);
-            counter += 1;
-        }
+            for (int i = 0; i < currentCustomerCart.size(); i += 1) {
+
+                currentCustomerQty = correspondingQty.get((i));
+
+                customer.customerProdQty = currentCustomerQty;
+                // customer account is charged with equivalent product amount
+                customer.makePayment(currentCustomerCart.get(i), currentCustomerQty, customer.bankInfo);
+                // removed from cart
+                try {
+                    sellProduct(currentCustomerCart.get(i).getName(), categoryName);
+                    counter += 1;
+                } catch (Exception ex){
+                    ex.getMessage();
+                }
+            }
 
 
-        currentCustomer = customer;
-        print(customer, currentCustomerCart.get(0));
+            currentCustomer = customer;
+            print(customer, currentCustomerCart.get(0));
 
-        if (isSpecialCustomer) {
-            return currentCustomer;
+            if (isSpecialCustomer) {
+                return currentCustomer;
+            }
         }
 
         return null;
@@ -130,13 +155,14 @@ public class Cashier extends  Staff implements IPrint <Customer, Product>{
     }
 
     // hard code the product name here
-    public  boolean checkInventory(String productName ) {
+    public  boolean checkInventory(String productName ) throws Exception{
         boolean found = MainCatalogue.isProductInStore(productName);
 
         if (!found) {
             System.out.println("Sorry, the Product is not available at this time");
             throw  new NullPointerException("Product Not Returned");
         }
+
         for (String choice : customersIntendedOrders) {
             // System.out.println(Str.matches("(.*)Tutorials(.*)"));
             // Cookie
@@ -253,22 +279,5 @@ public class Cashier extends  Staff implements IPrint <Customer, Product>{
         return workExperience;
     }
 
-//    private void removeProductFromCatalogue(Product product){
-//        ArrayList<Product> catalogue = MainCatalogue.sendProdCatalogue();
-//        int size = catalogue.size();
-//        int i = 0;
-//
-//        while (i < size){
-//            Product p = catalogue.get(i);
-//            if (p.getName().equals(product.getName())){
-//                catalogue.remove(product);
-//                // TODO
-//                // check if true
-//
-//            }
-//
-//
-//            i++;
-//        }
-//    }
+
 }

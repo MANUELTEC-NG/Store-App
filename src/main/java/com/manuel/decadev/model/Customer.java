@@ -1,7 +1,6 @@
 package com.manuel.decadev.model;
 
 import com.manuel.decadev.model.Handlers.PrintHandler;
-import com.manuel.decadev.model.Interface.IPrint;
 import com.manuel.decadev.model.ProductCataloque.MainCatalogue;
 
 import java.util.*;
@@ -58,33 +57,39 @@ public class Customer extends Person  {
     }
 
 
-    public String makePayment (Product item, int quantity) {
-        bankInfo.setCustomerFName(firstName);
-        bankInfo.setCustomerLastName(lastName);
+    public String makePayment (Product item, int quantity, CusBankAccount wallet) {
 
         // TODO
         //implement the logic of making payment
         // issue payment to the Store Bank Account
         System.out.println("Customer is making payment...");
         String notifMsg = "Issues with making payment";
-        if (hasBalance()){
-            double balance = bankInfo.getBankBalance();
-            double currentCharges = item.getPrice() * quantity;
-             totalPrice += currentCharges;
-            this.bankInfo.setBankBalance(balance - currentCharges );
-            notifMsg = "Payment Successful";
 
-            PrintHandler.outputHelperMethod(notifMsg);
+        try{
+            if (hasBalance(wallet)){
 
-            System.out.println("$" + (item.getPrice() * quantity) + " " + "charged from" + " " + bankInfo.getCustomerFName() + " Bank Account");
-            updateNumberOfPatronage();
+                double balance = wallet.getBankBalance();
+                double currentCharges = item.getPrice() * quantity;
+                totalPrice += currentCharges;
+                wallet.setBankBalance(balance - currentCharges );
+                notifMsg = "Payment Successful";
 
-        } else {
-            System.out.println("Can't process orders \n Not enough fund in account");
+                PrintHandler.outputHelperMethod(notifMsg);
+
+                System.out.println("$" + (item.getPrice() * quantity) + " " + "charged from" + " " + bankInfo.getCustomerFName() + " Bank Account");
+
+            } else {
+                System.out.println("Can't process orders \n Not enough fund in account");
+            }
+
+        } catch (Exception ex){
+
+            System.out.println(ex.getMessage());
         }
 
 
-        return notifMsg;
+         return notifMsg;
+
     }
 
     public void giveReview (Product itemBrand) {
@@ -93,19 +98,60 @@ public class Customer extends Person  {
     }
 
 
-    private void findMatchingProduct(ArrayList<Product> list, String choice) {
-
+    private boolean addProdChoiceToCart(ArrayList<Product> list, String choice) throws Exception {
+       /* boolean match = false;
+        int remaingQty;
         for (Product product : list){
-            if (product.getName().matches(choice) || product.getName().equals(choice)){
+            remaingQty = (MainCatalogue.getStock().get(product.getName()) - 1);
+            if (remaingQty != 0 && product.getName().matches(choice) || product.getName().equals(choice)){
+                match = true;
                 customerCart.add(product);
+
+                MainCatalogue.getStock().put(product.getName(), remaingQty);
+                if (remaingQty == 0){
+                    System.out.println("This product is out of stock");
+                    return false;
+                }
                 //TODO
                 // Check if product added
-                return;
+
             }
 
         }
-        System.out.println("Product Name Not Found");
 
+
+        return match;
+
+        */
+
+
+        boolean match = false;
+
+        int remaingQty;
+        for (Product product : list) {
+            remaingQty = MainCatalogue.getStock().get(product.getName());
+            if ((remaingQty != 0 && product.getName().matches(choice) )|| product.getName().equals(choice)) {
+                remaingQty -= 1;
+                match = true;
+                customerCart.add(product);
+                // remove this product
+                list.remove(product);
+                MainCatalogue.getStock().put(product.getName(), remaingQty);
+                return true;
+                /*if (remaingQty == 0) {
+                    System.out.println("This product is out of stock");
+                    throw new Exception("Out of stock Exception");
+                    //return false;
+                } */
+                //TODO
+                // Check if product added
+
+            }
+
+        }
+
+
+        return match;
     }
 
     static public void updateNumberOfPatronage () {
@@ -113,9 +159,6 @@ public class Customer extends Person  {
         Customer.numberOfPatronage += 1;
     }
 
-//    public void setProductNameOfChoice(String productNameOfChoice) {
-//        this.productNameOfChoice.add(productNameOfChoice);
-//    }
 
     public void promptInput(){
         Scanner input = new Scanner(System.in);
@@ -173,70 +216,92 @@ public class Customer extends Person  {
    }
 
    public boolean hasChoicePreference(){
-        return (productNameOfChoice.size() != 0 && quantities.size() != 0);
+        return (this.productNameOfChoice.size() != 0 && this.quantities.size() != 0);
    }
-    public  String searchCatalogueForProduct(String productName ){
+    public  List<Product> searchCatalogueForProduct(List<String> customerItemList ) {
+
+        String category = "";
+        boolean found = false;
+        // comfirm if items are in store
+        for (String productName : customerItemList) {
+            found = MainCatalogue.isProductInStore(productName);
+
+            if (!found) {
+                System.out.println("Sorry, the Product is not available at this time");
+                throw new NullPointerException("Product Not Returned");
+            }
+            // add product to cart
+           find(productName);
+
+        }
+
+       return customerCart;
+    }
+
+
+    private  String find(String choice){
 
         String COOKIES = "cookies";
         String BARS = "bars";
         String SNACKS = "snacks";
         String CRACKERS = "crackers";
+
         String NOTFOUND = "Product Not Under Any Category";
+        boolean CHOCO = choice.matches("(.*)choco(.*)");
+        boolean ARR = choice.matches("(.*)Arr(.*)");
+        boolean OATMEAL = choice.matches("(.*)oat(.*)");
 
-        boolean found = MainCatalogue.isProductInStore(productName);
+        // Bars
+        boolean CARROT = choice.matches("(.*)car(.*)");
+        boolean BRAN = choice.matches("(.*)bran(.*)");
+        boolean BANANA = choice.matches("(.*)ban(.*)");
 
-        if (!found) {
-            System.out.println("Sorry, the Product is not available at this time");
-            throw  new NullPointerException("Product Not Returned");
-        }
-        if (productNameOfChoice.size() == 0){
-            productNameOfChoice = Cashier.forwardAutoPopulatedChoices();
-        }
-        for (String choice : productNameOfChoice) {
-            // System.out.println(Str.matches("(.*)Tutorials(.*)"));
-            // Cookie
-            boolean CHOCO = choice.matches("(.*)choco(.*)");
-            boolean ARR = choice.matches("(.*)Arr(.*)");
-            boolean OATMEAL = choice.matches("(.*)oat(.*)");
+        //Snacks
+        boolean POTATO = choice.matches("(.*)po(.*)");
+        boolean PRETZEL = choice.matches("(.*)pret(.*)");
 
-            // Bars
-            boolean CARROT = choice.matches("(.*)car(.*)");
-            boolean BRAN = choice.matches("(.*)bran(.*)");
-            boolean BANANA = choice.matches("(.*)ban(.*)");
-
-            //Snacks
-            boolean POTATO = choice.matches("(.*)po(.*)");
-            boolean PRETZEL = choice.matches("(.*)pret(.*)");
-
-            //Crackers
-            boolean WHOLE = choice.matches("(.*)whole(.*)");
-            boolean WHEAT = choice.matches("(.*)whea(.*)");
+        //Crackers
+        boolean WHOLE = choice.matches("(.*)whole(.*)");
+        boolean WHEAT = choice.matches("(.*)whea(.*)");
 
 
-
-            if (CHOCO || ARR || OATMEAL){
-                productShelve = MainCatalogue.getStoreShelve().get(COOKIES);
-                findMatchingProduct(productShelve, choice);
-                return  COOKIES;
-            } else if (CARROT || BRAN || BANANA){
-                productShelve =  MainCatalogue.getStoreShelve().get(BARS);
-                findMatchingProduct(productShelve, choice);
-                return  BARS;
-            } else if (POTATO || PRETZEL){
-                productShelve =  MainCatalogue.getStoreShelve().get(SNACKS);
-                findMatchingProduct(productShelve, choice);
-                return  SNACKS;
-            } else if (WHOLE || WHEAT){
-                productShelve =  MainCatalogue.getStoreShelve().get(CRACKERS);
-                findMatchingProduct(productShelve, choice);
-                return  CRACKERS;
+        if (CHOCO || ARR || OATMEAL) {
+            productShelve = MainCatalogue.getStoreShelve().get(COOKIES);
+            try {
+                addProdChoiceToCart(productShelve, choice);
+            } catch (Exception e) {
+                e.getMessage();
             }
-
+            return  COOKIES;
+        } else if (CARROT || BRAN || BANANA) {
+            productShelve = MainCatalogue.getStoreShelve().get(BARS);
+            try {
+                addProdChoiceToCart(productShelve, choice);
+            } catch (Exception e) {
+                e.getMessage();
+            }
+            return  BARS;
+        } else if (POTATO || PRETZEL) {
+            productShelve = MainCatalogue.getStoreShelve().get(SNACKS);
+            try {
+                addProdChoiceToCart(productShelve, choice);
+            } catch (Exception e) {
+                e.getMessage();
+            }
+             return  SNACKS;
+        } else if (WHOLE || WHEAT) {
+            productShelve = MainCatalogue.getStoreShelve().get(CRACKERS);
+            try {
+                addProdChoiceToCart(productShelve, choice);
+            } catch (Exception e) {
+                e.getMessage();
+            }
+            return CRACKERS;
 
         }
-
-        return NOTFOUND;
+        return "NOT FOUND IN ANY OF THE STORE CATEGORY";
     }
+
 
     public List<String> getProductChoices() {
         return productNameOfChoice;
@@ -249,6 +314,7 @@ public class Customer extends Person  {
 
         this.bankInfo = bankAccount;
     }
+
     public void setPriceBudget(double priceBudget) {
         this.priceBudget = priceBudget;
     }
@@ -284,18 +350,18 @@ public class Customer extends Person  {
         return fullName;
     }
 
-    public CusBankAccount getBankInfo() {
+    public CusBankAccount getBankInfo(CusBankAccount wallet) {
 
-        if (bankInfo == null) {
+        if (wallet == null) {
             throw new NullPointerException("Customer's Account Information is Not Set Yet");
         }
         return bankInfo;
     }
 
-    public boolean hasBalance(){
-        if (bankInfo != null && bankInfo.getBankBalance() > 0)
+    public boolean hasBalance(CusBankAccount wallet) throws Exception {
+        if (wallet != null && wallet.getBankBalance() > 0)
             return true;
-        return false;
+        throw new Exception("Balance is too low");
     }
 
 
