@@ -2,6 +2,7 @@ package com.manuel.decadev.model;
 
 import com.manuel.decadev.model.Handlers.PrintHandler;
 import com.manuel.decadev.model.ProductCataloque.MainCatalogue;
+import com.manuel.decadev.model.threads.ProductThread;
 
 import java.util.*;
 
@@ -18,21 +19,20 @@ public class Customer extends Person  {
     CusBankAccount bankInfo;
     public int customerProdQty;
     private double totalPrice = 0;
-
     List<Product> customerCart = new ArrayList<>();
     private List<String> productNameOfChoice = new ArrayList<>();
     private ArrayList<Integer> quantities = new ArrayList<>();
     ArrayList<Product> productShelve;
+    boolean finishedProdSelection = false;
+    public String prodCategory = "";
+    public String currentProduct = "";
 
-
-   // List<Product>
     public Customer(String firstName, String lastName, String gender, String email, double phone) {
         super(firstName, lastName, gender);
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.phone = phone;
-
 
     }
     public Customer(CusBankAccount bank, double phone,  String email){
@@ -41,23 +41,12 @@ public class Customer extends Person  {
         this.phone = phone;
 
     }
-
     public Customer(){
         this("John", "Doe", "male", "johndoe@gmail.com", 123-456-789);
     }
 
 
-    public void purchaseProduct(String productName, String fromCatalogue) {
-        // TODO
-        // implement purchase method
-//       Product product = this.searchCatalogue(productName, fromCatalogue);
-//        makePayment(product);
-//        custCart.add(product);
-
-    }
-
-
-    public String makePayment (Product item, int quantity, CusBankAccount wallet) {
+    public boolean makePayment (Product item, int quantity, CusBankAccount wallet) {
 
         // TODO
         //implement the logic of making payment
@@ -76,7 +65,9 @@ public class Customer extends Person  {
 
                 PrintHandler.outputHelperMethod(notifMsg);
 
-                System.out.println("$" + (item.getPrice() * quantity) + " " + "charged from" + " " + bankInfo.getCustomerFName() + " Bank Account");
+                System.out.println("$" + (item.getPrice() * quantity) + " " + "charged from" + " " +
+                        bankInfo.getCustomerFName() + " Bank Account");
+                return true;
 
             } else {
                 System.out.println("Can't process orders \n Not enough fund in account");
@@ -87,78 +78,44 @@ public class Customer extends Person  {
             System.out.println(ex.getMessage());
         }
 
-
-         return notifMsg;
+         return false;
 
     }
-
     public void giveReview (Product itemBrand) {
         // TODO - implement logic of
         // customer giving review to product bought
     }
-
-
-    private boolean addProdChoiceToCart(ArrayList<Product> list, String choice) throws Exception {
-       /* boolean match = false;
-        int remaingQty;
-        for (Product product : list){
-            remaingQty = (MainCatalogue.getStock().get(product.getName()) - 1);
-            if (remaingQty != 0 && product.getName().matches(choice) || product.getName().equals(choice)){
-                match = true;
-                customerCart.add(product);
-
-                MainCatalogue.getStock().put(product.getName(), remaingQty);
-                if (remaingQty == 0){
-                    System.out.println("This product is out of stock");
-                    return false;
-                }
-                //TODO
-                // Check if product added
-
-            }
-
-        }
-
-
-        return match;
-
-        */
-
-
+    /*private  boolean addProdChoiceToCart(ArrayList<Product> list, String choice) throws Exception {
         boolean match = false;
 
-        int remaingQty;
+        int initialQty;
         for (Product product : list) {
-            remaingQty = MainCatalogue.getStock().get(product.getName());
-            if ((remaingQty != 0 && product.getName().matches(choice) )|| product.getName().equals(choice)) {
-                remaingQty -= 1;
+            initialQty = MainCatalogue.getStock().get(product.getName());
+            if ((initialQty != 0 && product.getName().matches(choice) )|| product.getName().equals(choice)) {
+                initialQty -= 1;
                 match = true;
                 customerCart.add(product);
-                // remove this product
+                finishedProdSelection = true;
                 list.remove(product);
-                MainCatalogue.getStock().put(product.getName(), remaingQty);
-                return true;
-                /*if (remaingQty == 0) {
+                MainCatalogue.getStock().put(product.getName(), initialQty);
+                return match;
+            } else if (initialQty == 0){
+
                     System.out.println("This product is out of stock");
                     throw new Exception("Out of stock Exception");
-                    //return false;
-                } */
-                //TODO
-                // Check if product added
-
+                }
             }
 
-        }
-
-
         return match;
+
     }
+
+     */
+
 
     static public void updateNumberOfPatronage () {
-
         Customer.numberOfPatronage += 1;
     }
-
 
     public void promptInput(){
         Scanner input = new Scanner(System.in);
@@ -212,18 +169,18 @@ public class Customer extends Person  {
 
         //findMatchingProduct();
 
-
    }
 
    public boolean hasChoicePreference(){
         return (this.productNameOfChoice.size() != 0 && this.quantities.size() != 0);
    }
-    public  List<Product> searchCatalogueForProduct(List<String> customerItemList ) {
+    public  List<Product> confirmProductsAvailability(List<String> customerItemList ) {
 
-        String category = "";
         boolean found = false;
-        // comfirm if items are in store
+        // confirm if items are in store
         for (String productName : customerItemList) {
+           this.currentProduct = productName;
+
             found = MainCatalogue.isProductInStore(productName);
 
             if (!found) {
@@ -231,13 +188,13 @@ public class Customer extends Person  {
                 throw new NullPointerException("Product Not Returned");
             }
             // add product to cart
-           find(productName);
+          prodCategory = find(productName);
+
 
         }
 
        return customerCart;
     }
-
 
     private  String find(String choice){
 
@@ -264,45 +221,63 @@ public class Customer extends Person  {
         boolean WHOLE = choice.matches("(.*)whole(.*)");
         boolean WHEAT = choice.matches("(.*)whea(.*)");
 
-
         if (CHOCO || ARR || OATMEAL) {
             productShelve = MainCatalogue.getStoreShelve().get(COOKIES);
+            // main
             try {
-                addProdChoiceToCart(productShelve, choice);
+                ProductThread purchaseThread = new ProductThread(Cashier.getCurrentCustomer(), productShelve, choice);
+                Thread thread = new Thread(purchaseThread);
+                thread.start();
+               // thread.join();
+                //addProdChoiceToCart(productShelve, choice);
+
+
             } catch (Exception e) {
                 e.getMessage();
             }
             return  COOKIES;
-        } else if (CARROT || BRAN || BANANA) {
+        }
+        else if (CARROT || BRAN || BANANA) {
             productShelve = MainCatalogue.getStoreShelve().get(BARS);
             try {
-                addProdChoiceToCart(productShelve, choice);
+                ProductThread purchaseThread = new ProductThread(Cashier.getCurrentCustomer(), productShelve, choice);
+                Thread thread = new Thread(purchaseThread);
+                thread.start();
+
+//                addProdChoiceToCart(productShelve, choice);
             } catch (Exception e) {
                 e.getMessage();
             }
             return  BARS;
-        } else if (POTATO || PRETZEL) {
+        }
+        else if (POTATO || PRETZEL) {
             productShelve = MainCatalogue.getStoreShelve().get(SNACKS);
             try {
-                addProdChoiceToCart(productShelve, choice);
+                ProductThread purchaseThread = new ProductThread(Cashier.getCurrentCustomer(), productShelve, choice);
+                Thread thread = new Thread(purchaseThread);
+                thread.start();
+//                addProdChoiceToCart(productShelve, choice);
             } catch (Exception e) {
                 e.getMessage();
             }
              return  SNACKS;
-        } else if (WHOLE || WHEAT) {
+        }
+        else if (WHOLE || WHEAT) {
             productShelve = MainCatalogue.getStoreShelve().get(CRACKERS);
             try {
-                addProdChoiceToCart(productShelve, choice);
+                ProductThread purchaseThread = new ProductThread(Cashier.getCurrentCustomer(), productShelve, choice);
+                Thread thread = new Thread(purchaseThread);
+                thread.start();
+//                addProdChoiceToCart(productShelve, choice);
             } catch (Exception e) {
                 e.getMessage();
             }
             return CRACKERS;
 
         }
-        return "NOT FOUND IN ANY OF THE STORE CATEGORY";
+
+        return NOTFOUND;
     }
-
-
     public List<String> getProductChoices() {
         return productNameOfChoice;
     }
@@ -311,7 +286,6 @@ public class Customer extends Person  {
     }
 
     public void setBankAccountInfo(CusBankAccount bankAccount){
-
         this.bankInfo = bankAccount;
     }
 
@@ -345,11 +319,9 @@ public class Customer extends Person  {
     public double getTotalPrice() {
         return totalPrice;
     }
-
     public String getFullName() {
         return fullName;
     }
-
     public CusBankAccount getBankInfo(CusBankAccount wallet) {
 
         if (wallet == null) {
@@ -357,13 +329,10 @@ public class Customer extends Person  {
         }
         return bankInfo;
     }
-
     public boolean hasBalance(CusBankAccount wallet) throws Exception {
         if (wallet != null && wallet.getBankBalance() > 0)
             return true;
         throw new Exception("Balance is too low");
     }
-
-
 
 }

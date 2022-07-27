@@ -11,7 +11,7 @@ import java.util.*;
 // https://github.com/decadevs/week-3-task-Yhello-G
 
 
-public class Store  {
+public class Store {
 
     private static Cashier cashier;
     private static Manager aManager;
@@ -33,6 +33,7 @@ public class Store  {
 
     public static void main(String[] args) {
         try {
+            // this part should run on a separate thread
             MainCatalogue.partitionProductToCatalogues();
             PrintHandler.outputHelperMethod("Product Successfully Loaded from file");
             MainCatalogue.displayRes();
@@ -80,17 +81,11 @@ public class Store  {
 
         //checkNonNull(chocolateCatalogue != null, "Chocolate Catalogue is empty");
 
-        Customer customer = new Customer("Micheal", "Jordan", "male", "fhfh@gmail", 3447844);
-         c1Wallet = new CusBankAccount(customer.getFirstName(),
-                customer.getLastName(), 30000);
-                customer.setBankAccountInfo(c1Wallet);
-                //customer.promptInput();
-               // ArrayList<Product> customerProduct = customer.forwardProductToCashier();
-
-
+        //customer.promptInput();
+        // ArrayList<Product> customerProduct = customer.forwardProductToCashier();
 
        // interactWithManagerClass();
-         //interactWithCahierClass();
+        // interactWithCahierClass();
 
     }
 
@@ -101,7 +96,7 @@ public class Store  {
         for (int i = 0; i < numOfPeople; i += 1) {
             Customer aCustomer = customersInQueue.element();
            specialCustomer = cashier.receiveOrdersInfoFromCustomer(aCustomer, isSpecialCustomer);
-           specialCustomer.customerProdQty += i*3;
+           //specialCustomer.customerProdQty += i*3;
 
            if (isSpecialCustomer && specialCustomer != null){
                priorityQueue.offer(specialCustomer);
@@ -117,12 +112,14 @@ public class Store  {
             PrintHandler.outputHelperMethod("------------------------------------------------");
         }
 
-        PrintHandler.outputHelperMethod("Would you want to see SAME OPERATION but on priority based scenario?");
+        //PrintHandler.outputHelperMethod("Would you want to see SAME OPERATION but on priority based scenario?");
+        /*
         String resp = input.nextLine();
         if (resp.equals("yes")) {
 
             attendToBasedOnPriority();
-        }
+        }*/
+
     }
 
 
